@@ -1,0 +1,11 @@
+
+         <div class="stats-and-search-block">
+            <form class="form-inline search" autocomplete="off" novalidate="">
+               <div class="form-group cc-stats"><span class="cc-stats-header">Last found block</span><br><span class="cc-stats-value">{{last_found_block}}</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Blockchain height</span><br><span class="cc-stats-value">{{selected_pool_stats.height}}</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Pool hashrate</span><br><span class="cc-stats-value">{{selected_pool_stats.pool_hashrate|hashrateValue}} {{selected_pool_stats.pool_hashrate|hashrateUnits}}/s</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Network hashrate</span><br><span class="cc-stats-value">{{selected_pool_stats.world_hashrate|hashrateValue}} {{selected_pool_stats.world_hashrate|hashrateUnits}}/s</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Total payments</span><br><span class="cc-stats-value">{{selected_pool_stats.total_payments}}</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Total miners paid</span><br><span class="cc-stats-value">{{selected_pool_stats.total_miners_paid}}</span></div>
+            </form>
+         </div>
