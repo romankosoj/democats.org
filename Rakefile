@@ -48,7 +48,6 @@ task :publish, [:no_commit_msg] => [:clean, :remove_output_dir] do |t, args|
     `git checkout gh-pages`
   end
   tmpdir = Dir.mktmpdir
-  FileUtils.cp_r("enterprise", tmpdir)
   FileUtils.cp("robots.txt", tmpdir)
   `git checkout master`
 
@@ -60,7 +59,6 @@ task :publish, [:no_commit_msg] => [:clean, :remove_output_dir] do |t, args|
     ENV['GIT_WORK_TREE'] = Dir.pwd
     File.unlink(gif) if File.file?(gif)
     # restore precious files
-    FileUtils.cp_r("#{tmpdir}/enterprise", ".")
     FileUtils.cp("#{tmpdir}/robots.txt", ".")
     FileUtils.rm_rf(tmpdir) if File.exists?(tmpdir)
     `git add -A`
