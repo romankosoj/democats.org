@@ -1,0 +1,254 @@
+<html ng-app="pools">
+<head>
+  <title ng-bind="header">Cryptonote blockchain explorer | Democats.org</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/1.0.0-beta.3/angular-moment.min.js"></script>
+  <script src="/dist/angular-local-storage.min.js"></script>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+
+  <script src="/config.js"></script>
+
+  <style>
+    @import url(//fonts.googleapis.com/css?family=Roboto:100,300,700);
+  </style>
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-883823-24', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+</head>
+
+<body>
+  
+<header class="old-header ng-scope">
+   <div class="navbar navbar-inverse">
+      <div class="container">
+         <div class="row">
+            <div class="col-xs-2">
+               <div class="navbar-header">
+                  <div class="logo-wrapper"><a href="/">Democats</a></div>
+               </div>
+            </div>
+            <div class="col-xs-10">
+               <div class="nav navbar-nav">
+                  <div class="links pull-left"><span class="iconed-part"><a class="iconed iconed-dashboard" href="/dashboard/">Dashboard</a><a class="iconed iconed-stats" href="/">Pools</a></span></div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</header>
+
+  
+<div class="container" ng-controller="BlockDetailsCtl">
+   <noscript></noscript>
+   <div class="main-app-container">
+      <div class="container">
+                  <div class="stats-and-search-block">
+            <form class="form-inline search" autocomplete="off" novalidate="">
+               <div class="form-group cc-stats"><span class="cc-stats-header">Blockchain height</span><br /><span class="cc-stats-value">{{selected_pool_stats.height}}</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Coins emitted</span><br /><span class="cc-stats-value">{{coins_emitted|quantityValue:1}} {{coins_emitted|quantityUnits}}</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Difficulty</span><br /><span class="cc-stats-value">{{selected_pool_stats.difficulty|quantityValue}} {{selected_pool_stats.difficulty|quantityUnits}}</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Network hashrate</span><br /><span class="cc-stats-value">{{selected_pool_stats.world_hashrate|hashrateValue}} {{selected_pool_stats.world_hashrate|hashrateUnits}}/s</span></div>
+               <div class="form-group search-block" ng-controller="SearchBlockchainCtl"><input placeholder="block hash / transaction hash" class="input-large form-control" ng-model="search" /><button type="submit" class="btn btn-success" ng-click="searchFor(search)">Search</button></div>
+            </form>
+         </div>
+
+         <section class="blockchain">
+            <div>
+               <h1>               <a href="/blockchain/?name={{currency_name}}" class="btn btn-primary pull-right add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=" /><span>Blockchain</span></a>
+               <a href="/pool-blocks/?name={{currency_name}}" class="btn btn-info pull-right add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=" /><span>Pool blocks</span></a>
+               <!--<a href="/charts/?name={{currency_name}}" class="btn btn-warning pull-right add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAVCAYAAADID4fUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAjpJREFUeNrE1k1IVFEUwPE3NpTmR4kIRhGVEFQgKcJswghBqDbRylpEq1pELQrctAoKBClIFAyiUDCQKAjyo+9sFxEVZtAio8AiKsJAQ6he/yPn0ZnDG+cNwXTgN/Pm3nfvO/fde9+bVBiGwX+ILjzHoPwoKfLFUziHHRiJCtNFTuA8MmjFTLGTkAR6sBVtNoFCpqMetf+QQB8asNMnsBCyMPPI4AOmsSvB+VYJLuIRKlzduug4Xydy0U/63YK36EFZggSW4DIeYLmrO4l5tOZL4qDegYwpW4FBvEJTngQGcMclkEJX+Ddm0ZirE8n0DTbmqG/XO9Sht9wncAVjLgEpvxBmx22Ux42gF89Q5+r2otr8Xov7eKjHUpbGEEZRas5dqonZuK7lWdMhja7hLirdLTyjDd9H82gWXofelQO4iptR56pMy2z064CzFqaMcFyztR2kdXHZ+KXzusyc14hJ3HDtK3Vh2ujWgQU2iTWYwFlXWY6RMHe8wBY3YptADZ64Nqfj1ph83MNxV1GLx66DSxh2ZT9wzI8Mq/DSnPcbJ3LtpiBmz2/Aa3exU2Z9HMGcq7+lF5Zz1mPK1P3EocWeKb5A5vaj6+BwTMNNeOoS+Yyj+mSNYl63c5A0CVn1300HMto9izSW+e/UhRoX0n53ksd7dLBfs47iK7YlfD9sxzuXwIyWB0mTqNJ9HppnweYCX1Qr9XEu8QXNhbS3b8pZ3aqrC0zA2ue2bSIp8x+zBRP4Vuw/nH8EGAD6cW7pH7wFVgAAAABJRU5ErkJggg=="><span>Charts</span></a>
+                --><br />
+               <span>{{currency_name | capitalize}}</span><span> block </span><small>{{block.hash}}</small></h1>
+                     <table class="table dic">
+         <tbody>
+            <tr>
+               <td><span>Height</span><a data-hint="Block index in the chain, counting from zero (i.e. genesis block)." class="hint--right hint--rounded hint--tooltip circle">?</a></td>
+               <td><a ng-click="changeBlock(block.prev_hash)" class="page">&lt;</a><span>{{block.height}}</span><a ng-if="block.height != height" ng-click="changeBlock(block.next_hash)" class="page">&gt;</a></td>
+            </tr>
+            <tr>
+               <td>
+                  <span>Timestamp (UTC)</span>
+                  <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
+                     <div class="hint__content">Block timestamp displayed as UTC.<br />The timestamp correctness it up to miner, who mined the block.</div>
+                     <span>?</span>
+                  </a>
+               </td>
+               <td><span>{{ block.timestamp | amFromUnix | amUtc | amDateFormat:'YYYY-MM-DD HH:mm:ss' }}</span><span> (</span><span>{{block.timestamp | amFromUnix | amUtc | timeAgo}}</span><span>)</span></td>
+            </tr>
+            <tr>
+               <td>
+                  <span>Difficulty</span>
+                  <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
+                     <div class="hint__content" style="width:400px;white-space:normal;">Simply, it means how difficult it is to find a solution for the block.<br />More specifically, it`s mathematical expectation for number of hashes someone needs to calculate in order to find a correct nonce value solving the block.<br />Last block difficulty is often considered as current network difficulty.</div>
+                     <span>?</span>
+                  </a>
+               </td>
+               <td>{{block.difficulty | number}}</td>
+            </tr>
+            <tr>
+               <td>
+                  <span>Orphan</span>
+                  <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
+                     <div class="hint__content" style="width:400px;white-space:normal;">True, if the block belongs to an alternative chain.<br />In such case all the transactions, excluding coinbase, are removed from the block back to transaction pool to be included in another block. It means there is no reward for the miner.</div>
+                     <span>?</span>
+                  </a>
+               </td>
+               <td>{{block.orphan_status ? "yes" : "no"}}</td>
+            </tr>
+            <tr>
+               <td><span>Transactions</span><a data-hint="Number of transactions in the block, including coinbase transaction (which transfers block reward to the miner)." class="hint--right hint--rounded hint--tooltip circle">?</a></td>
+               <td>{{block.transactions.length | number}}</td>
+            </tr>
+            <tr>
+               <td>
+                  <span>Total transactions size, bytes</span>
+                  <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
+                     <div class="hint__content">Cumulative size of all transactions in the block, including coinbase.<br />In case it's exceeding 'effective txs median' the reward penalty occurs and therefore miner receives less reward.</div>
+                     <span>?</span>
+                  </a>
+               </td>
+               <td>{{block.transactionsCumulativeSize | number}}</td>
+            </tr>
+            <tr>
+               <td>
+                  <span>Total block size, bytes</span>
+                  <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
+                     <div class="hint__content">Size of the whole block, i.e. block header plus all transactions.<br />&lt;total&nbsp;block&nbsp;size&gt; = &lt;block&nbsp;header&gt; + &lt;total&nbsp;transactions&nbsp;size&gt;</div>
+                     <span>?</span>
+                  </a>
+               </td>
+               <td>{{block.blockSize | number}}</td>
+            </tr>
+            <tr>
+               <td><span>Current txs median, bytes</span><a data-hint="Median value of block total transactions size among last 100 blocks." class="hint--right hint--rounded hint--tooltip circle">?</a></td>
+               <td>{{block.sizeMedian | number}}</td>
+            </tr>
+            <tr>
+               <td>
+                  <span>Effective txs median, bytes</span>
+                  <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
+                     <div class="hint__content">Bounded from below median value that is actually used to calculate penalty.<br />More specifically, &lt;effective median&gt; = max(&lt;current median&gt;, 20000)</div>
+                     <span>?</span>
+                  </a>
+               </td>
+               <td>{{block.effectiveSizeMedian | number}}</td>
+            </tr>
+            <tr>
+               <td>
+                  <span>Reward penalty</span>
+                  <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
+                     <div class="hint__content">Penalty for exceeding the median.<br />&lt;penalty&gt; = (&lt;total&nbsp;transactions&nbsp;size&gt; / &lt;effective&nbsp;tx&nbsp;median&gt; − 1) ^ 2<br />No penalty if total transactions size is less then effective median.<br />Penalty is near 100% if total txs size is twice the effective median. Greater blocks are not allowed.</div>
+                     <span>?</span>
+                  </a>
+               </td>
+               <td>{{block.penalty * 100 | number}}%</td>
+            </tr>
+            <tr>
+               <td>
+                  <span>Base Reward</span>
+                  <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
+                     <div class="hint__content">Base value for calculating the block reward. Does not depend on how many transactions are included into the block.<br />Also, this is how many coins the miner would receive if the block contains only coinbase transaction.</div>
+                     <span>?</span>
+                  </a>
+               </td>
+               <td>{{block.baseReward | asCoinUnits:selected_pool_stats.coin_units | number: coin_unit_fraction}}</td>
+            </tr>
+            <tr>
+               <td><span>Transactions fee</span><a data-hint="Sum of fees for all transactions in the block." class="hint--right hint--rounded hint--tooltip circle">?</a></td>
+               <td>{{block.totalFeeAmount | asCoinUnits:selected_pool_stats.coin_units | number: coin_unit_fraction}}</td>
+            </tr>
+            <tr>
+               <td>
+                  <span>Reward</span>
+                  <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
+                     <div class="hint__content">Actual amount of coins the miner received for finding the block.<br />&lt;reward&gt; = &lt;base reward&gt; × (1 − &lt;penalty&gt;) + &lt;transactions fee&gt;</div>
+                     <span>?</span>
+                  </a>
+               </td>
+               <td>{{block.reward | asCoinUnits:selected_pool_stats.coin_units | number: coin_unit_fraction}}</td>
+            </tr>
+            <tr>
+               <td>
+                  <span>Total coins in the network</span>
+                  <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
+                     <div class="hint__content">Cumulative amount of coins issued by all the blocks in blockchain from the<br /> genesis and up to this block.</div>
+                     <span>?</span>
+                  </a>
+               </td>
+               <td>{{block.alreadyGeneratedCoins | asCoinUnits:selected_pool_stats.coin_units | number: coin_unit_fraction}}</td>
+            </tr>
+            <tr>
+               <td>
+                  <span>Total transactions in the network</span>
+                  <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
+                     <div class="hint__content">Cumulative number of transactions in the blockchain, from the<br /> genesis block and up to this block.</div>
+                     <span>?</span>
+                  </a>
+               </td>
+               <td>{{block.alreadyGeneratedTransactions | number}}</td>
+            </tr>
+         </tbody>
+      </table>
+      <h1>Transactions</h1>
+      <table class="table transactions">
+         <thead>
+            <tr>
+               <th>Hash</th>
+               <th><span>Fee</span><span> (</span><span>{{selected_pool.ticker}}</span><span>)</span></th>
+               <th><span>Total amount</span><span> (</span><span>{{selected_pool.ticker}}</span><span>)</span></th>
+               <th>Size</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr ng-repeat="transaction in block.transactions">
+               <td><a href="/blockchain/transaction/?name={{currency_name}}&amp;hash={{transaction.hash}}">{{transaction.hash}}</a></td>
+               <td>{{transaction.fee | asCoinUnits:selected_pool_stats.coin_units | number: coin_unit_fraction}}</td>
+               <td>{{transaction.amount_out | asCoinUnits:selected_pool_stats.coin_units | number: coin_unit_fraction}}</td>
+               <td>{{transaction.size}}</td>
+            </tr>
+         </tbody>
+      </table>
+         
+      </div>
+   
+
+
+<script src="/js/scripts.js"></script>
+<script src="/js/app.js"></script>
+</section></div></div></div>
+
+
+  
+<div>
+   <nav id="footer" class="navbar navbar-default">
+      <div class="shares">
+         <div class="container">
+            <div class="collapse navbar-collapse">
+               <ul class="nav navbar-nav navbar-right">
+                  <li class="copy"><a href="/terms-of-use/">Terms of Use</a></li>
+                  <li class="copy"><a href="/support/">Support</a></li>
+                  <li class="copy"><a href="/"><span>© </span><span>2015</span><span> Democats</span></a></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+   </nav>
+</div>
+
+</body>
+</html>
