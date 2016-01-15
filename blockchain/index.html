@@ -32,6 +32,7 @@
 </head>
 
 <body>
+<div class="main-app-container">
   
 <header class="old-header ng-scope">
    <div class="navbar navbar-inverse">
@@ -56,7 +57,6 @@
 <div class="container" ng-controller="BlocksListCtl">
    <noscript></noscript>
    <div class="main-app-container">
-      <div class="container">
                   <div class="stats-and-search-block">
             <form class="form-inline search" autocomplete="off" novalidate="">
                <div class="form-group cc-stats"><span class="cc-stats-header">Blockchain height</span><br /><span class="cc-stats-value">{{selected_pool_stats.height}}</span></div>
@@ -106,7 +106,6 @@
                </div>
             </div>
          </section>
-      </div>
    </div>
 </div>
 
@@ -133,5 +132,6 @@
    </nav>
 </div>
 
+</div>
 </body>
 </html>
