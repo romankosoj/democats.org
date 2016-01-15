@@ -8,7 +8,6 @@ layout: default
 <div class="container" ng-controller="BlocksListCtl">
    <noscript></noscript>
    <div class="main-app-container">
-      <div class="container">
          <%= render 'blockchain-header' %>
 
          <section class="blockchain">
@@ -47,7 +46,6 @@ layout: default
                </div>
             </div>
          </section>
-      </div>
    </div>
 </div>
 

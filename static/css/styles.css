@@ -255,7 +255,9 @@
     overflow: hidden
 }
 
-
+.container {
+    min-width: 1170px;
+}
 
 header.old-header {
     position: relative;

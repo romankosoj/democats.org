@@ -12,7 +12,7 @@ layout: default
      </div>
    </div>
    <div class="row">
-      <div class="col-md-8 topmargin">
+      <div class="col-xs-8 topmargin">
           <div class="currencies">
             <h5>Supported currencies </h5>
             <table class="table">
@@ -119,7 +119,9 @@ layout: default
 
 
       </div>
-      <div class="col-md-4 right-paddingless col-eq-height right-cell main-page__right-column"></div>
+      <div class="col-md-4 right-paddingless col-eq-height right-cell main-page__right-column">
+        
+      </div>
    </div>
 </div>
 <!-- /.container -->
