@@ -132,9 +132,6 @@
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
           $scope.coin_unit_fraction = Math.log10($scope.selected_pool_stats.coin_units);
 
-          if ($scope.height + 2 >= $scope.selected_pool_stats.height) {
-            $scope.changeHeight($scope.selected_pool_stats.height);
-          }
     });
 
     $scope.$watchCollection('[selected_pool, currencies]', function() {
@@ -147,6 +144,10 @@
                 $scope.changeHeight(parseInt(urlParam('height')));
             else
                 $scope.changeHeight($scope.selected_pool_stats.height);
+          }
+
+          if ($scope.height + 2 >= $scope.selected_pool_stats.height) {
+            $scope.changeHeight($scope.selected_pool_stats.height);
           }
     });
   }]);
@@ -197,25 +198,24 @@
           $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
           $rootScope.header = $filter('capitalize')($scope.selected_pool.name) + " block " + $scope.hash + " | Democats.org"; 
     });
-    $scope.$watch('currencies', function() {
+    $scope.$watchCollection('[selected_pool, currencies]', function() {
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
           $scope.coin_unit_fraction = Math.log10($scope.selected_pool_stats.coin_units);
 
-          if ($scope.height + 2 >= $scope.selected_pool_stats.height) {
-            $scope.height = $scope.selected_pool_stats.height;
-          }
-          $scope.getBlock($scope.hash);
-
-    });
-
-    $scope.$watchCollection('[selected_pool, currencies]', function() {
           if ($scope.selected_pool !== undefined && $scope.currencies !== undefined && ($scope.height === undefined || $scope.height === null)) {
             $scope.coins_emitted = blockFactory.last($scope.selected_pool, $scope.selected_pool_stats).success(function(data, status) {
                 $scope.coins_emitted = data.result.block.alreadyGeneratedCoins / $scope.selected_pool_stats.coin_units;
             });
             $scope.height = $scope.selected_pool_stats.height;
+
+            $scope.getBlock($scope.hash);
+          }
+
+          if ($scope.height + 2 >= $scope.selected_pool_stats.height) {
+            $scope.height = $scope.selected_pool_stats.height;
           }
     });
+
   }]);
 
 
@@ -243,12 +243,10 @@
           $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
           $rootScope.header = $filter('capitalize')($scope.selected_pool.name) + " transaction " + $scope.hash + " | Democats.org"; 
     });
-    $scope.$watch('currencies', function() {
+    $scope.$watchCollection('[selected_pool, currencies]', function() {
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
           $scope.coin_unit_fraction = Math.log10($scope.selected_pool_stats.coin_units);
-    });
 
-    $scope.$watchCollection('[selected_pool, currencies]', function() {
           if ($scope.selected_pool !== undefined && $scope.currencies !== undefined && ($scope.height === undefined || $scope.height === null)) {
             $scope.coins_emitted = blockFactory.last($scope.selected_pool, $scope.selected_pool_stats).success(function(data, status) {
                 $scope.coins_emitted = data.result.block.alreadyGeneratedCoins / $scope.selected_pool_stats.coin_units;
@@ -379,18 +377,9 @@
           $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
           $rootScope.header = $filter('capitalize')($scope.selected_pool.name) + " pool blocks | Democats.org"; 
     });
-    $scope.$watch('currencies', function() {
+    $scope.$watchCollection('[selected_pool, currencies]', function() {
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
           $scope.coin_unit_fraction = Math.log10($scope.selected_pool_stats.coin_units);
-
-          if ($scope.height !== undefined && $scope.height + 2 >= $scope.selected_pool_stats.height) {
-            $scope.height = $scope.selected_pool_stats.height;
-            $scope.getInitialBlocks();
-          }
-    });
-    $scope.$watchCollection('[selected_pool, currencies]', function() {
-          console.log($scope.selected_pool);
-          console.log($scope.currencies);
 
           if ($scope.selected_pool !== undefined && $scope.currencies !== undefined && ($scope.height === undefined || $scope.height === null)) {
             if (urlParam('height')) {
@@ -401,6 +390,11 @@
                 $scope.height = $scope.selected_pool_stats.height;
                 $scope.getInitialBlocks();
             }
+          }
+
+          if ($scope.height !== undefined && $scope.height + 2 >= $scope.selected_pool_stats.height) {
+            $scope.height = $scope.selected_pool_stats.height;
+            $scope.getInitialBlocks();
           }
     });
   }]);
@@ -471,7 +465,7 @@
         $scope.selected_pool = $filter('getByTicker')($scope.pools, "DSH");
     });
 
-    $scope.$watch('currencies', function() {
+    $scope.$watchCollection('[selected_pool, currencies]', function() {
       angular.forEach($scope.addresses, function(address, index) {
         var pool = $filter('getByName')($scope.pools, address.currency);
 
@@ -508,7 +502,7 @@
     }
 
     $scope.getPayments = function(timestamp) {
-        var url = $scope.pool.poolrpc+"get_payments?address="+$scope.address+"&time="+timestamp;
+        var url = $scope.selected_pool.poolrpc+"get_payments?address="+$scope.address+"&time="+timestamp;
         $http.get(url, http_config).success(function(data, status) {
             var raw_payments = data;
             for (var i = 0; i < raw_payments.length; i += 2){
@@ -520,14 +514,16 @@
     }
 
     $scope.$watch('pools', function() {
-        $scope.pool = $filter('getByName')($scope.pools, $scope.currency_name);
+        $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
     });
-    $scope.$watch('currencies', function() {
+    $scope.$watchCollection('[selected_pool, currencies]', function() {
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
           $scope.coin_unit_fraction = Math.log10($scope.selected_pool_stats.coin_units);
-          if ($scope.selected_pool_stats.height != $scope.height) {
-            $scope.height = $scope.selected_pool_stats.height;
-            $scope.getPayments(2000000000);
+          if ($scope.selected_pool !== undefined && $scope.currencies !== undefined) {
+            if ($scope.selected_pool_stats.height != $scope.height) {
+              $scope.height = $scope.selected_pool_stats.height;
+              $scope.getPayments(2000000000);
+            }
           }
     });
 
