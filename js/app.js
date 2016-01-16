@@ -132,19 +132,22 @@
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
           $scope.coin_unit_fraction = Math.log10($scope.selected_pool_stats.coin_units);
 
-          if ($scope.height === undefined || $scope.height === null) {
-            $scope.coins_emitted = blockFactory.last($scope.selected_pool, $scope.selected_pool_stats).success(function(data, status) {
-                $scope.coins_emitted = data.result.block.alreadyGeneratedCoins / $scope.selected_pool_stats.coin_units;
-            });
-
-            if (urlParam('height'))
-                $scope.changeHeight(parseInt(urlParam('height')));
-            else
-                $scope.changeHeight($scope.selected_pool_stats.height);
-          }
-          if ($scope.height + 1 == $scope.selected_pool_stats.height) {
+          if ($scope.height + 2 >= $scope.selected_pool_stats.height) {
             $scope.changeHeight($scope.selected_pool_stats.height);
           }
+
+          $scope.$watch('selected_pool', function() {
+            if ($scope.height === undefined || $scope.height === null) {
+              $scope.coins_emitted = blockFactory.last($scope.selected_pool, $scope.selected_pool_stats).success(function(data, status) {
+                  $scope.coins_emitted = data.result.block.alreadyGeneratedCoins / $scope.selected_pool_stats.coin_units;
+              });
+
+              if (urlParam('height'))
+                  $scope.changeHeight(parseInt(urlParam('height')));
+              else
+                  $scope.changeHeight($scope.selected_pool_stats.height);
+            }
+          });
     });
   }]);
 
@@ -198,16 +201,19 @@
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
           $scope.coin_unit_fraction = Math.log10($scope.selected_pool_stats.coin_units);
 
-          if ($scope.height === undefined || $scope.height === null) {
-            $scope.coins_emitted = blockFactory.last($scope.selected_pool, $scope.selected_pool_stats).success(function(data, status) {
-                $scope.coins_emitted = data.result.block.alreadyGeneratedCoins / $scope.selected_pool_stats.coin_units;
-            });
-            $scope.height = $scope.selected_pool_stats.height;
-          }
           if ($scope.height + 2 >= $scope.selected_pool_stats.height) {
             $scope.height = $scope.selected_pool_stats.height;
           }
           $scope.getBlock($scope.hash);
+
+          $scope.$watch('selected_pool', function() {
+            if ($scope.height === undefined || $scope.height === null) {
+              $scope.coins_emitted = blockFactory.last($scope.selected_pool, $scope.selected_pool_stats).success(function(data, status) {
+                  $scope.coins_emitted = data.result.block.alreadyGeneratedCoins / $scope.selected_pool_stats.coin_units;
+              });
+              $scope.height = $scope.selected_pool_stats.height;
+            }
+          });
     });
   }]);
 
@@ -239,13 +245,16 @@
     $scope.$watch('currencies', function() {
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
           $scope.coin_unit_fraction = Math.log10($scope.selected_pool_stats.coin_units);
-          if ($scope.height === undefined || $scope.height === null) {
-            $scope.coins_emitted = blockFactory.last($scope.selected_pool, $scope.selected_pool_stats).success(function(data, status) {
-                $scope.coins_emitted = data.result.block.alreadyGeneratedCoins / $scope.selected_pool_stats.coin_units;
-            });
-            $scope.height = $scope.selected_pool_stats.height;
-            $scope.getTransaction($scope.hash);
-          }
+
+          $scope.$watch('selected_pool', function() {
+            if ($scope.height === undefined || $scope.height === null) {
+              $scope.coins_emitted = blockFactory.last($scope.selected_pool, $scope.selected_pool_stats).success(function(data, status) {
+                  $scope.coins_emitted = data.result.block.alreadyGeneratedCoins / $scope.selected_pool_stats.coin_units;
+              });
+              $scope.height = $scope.selected_pool_stats.height;
+              $scope.getTransaction($scope.hash);
+            }
+          });
     });
   }]);
 
@@ -373,22 +382,23 @@
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
           $scope.coin_unit_fraction = Math.log10($scope.selected_pool_stats.coin_units);
 
-          if ($scope.height === undefined || $scope.height === null) {
-            if (urlParam('height')) {
-                $scope.height = parseInt(urlParam('height'));
-                $scope.getInitialBlocks();
-            }
-            else {
-                $scope.height = $scope.selected_pool_stats.height;
-                $scope.getInitialBlocks();
-            }
-          }
-
-          if ($scope.height + 2 >= $scope.selected_pool_stats.height) {
+          if ($scope.height !== undefined && $scope.height + 2 >= $scope.selected_pool_stats.height) {
             $scope.height = $scope.selected_pool_stats.height;
             $scope.getInitialBlocks();
           }
 
+          $scope.$watch('selected_pool', function() {
+            if ($scope.height === undefined || $scope.height === null) {
+              if (urlParam('height')) {
+                  $scope.height = parseInt(urlParam('height'));
+                  $scope.getInitialBlocks();
+              }
+              else {
+                  $scope.height = $scope.selected_pool_stats.height;
+                  $scope.getInitialBlocks();
+              }
+            }
+          });
     });
   }]);
 
