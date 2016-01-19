@@ -15,7 +15,7 @@ layout: default
                <h4 class="mine-title"><span class=""></span><span>Track address</span></h4>
             </div>
 
-  <div class="col-xs-6" style="margin-bottom:40px">
+  <div class="col-xs-8" style="margin-bottom:40px">
     <div class="input-group">
       <div class="input-group-btn">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{selected_pool.name | capitalize}} <span class="caret"></span></button>
@@ -28,7 +28,7 @@ layout: default
         <button class="btn btn-primary" type="button" ng-click="addAddress()">Track!</button>
       </span>
     </div><!-- /input-group -->
-  </div><!-- /.col-xs-6 -->
+  </div><!-- /.col-xs-8 -->
 
          </div>
          <div class="row" ng-repeat="address in addresses" inner-var="address_index = $index">
