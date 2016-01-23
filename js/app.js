@@ -184,7 +184,7 @@
 
     $scope.$watch('pools', function() {
           $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
-          $rootScope.header = $filter('capitalize')($scope.selected_pool.name) + " blockchain explorer | Democats.org"; 
+          $rootScope.window_title = $filter('capitalize')($scope.selected_pool.name) + " blockchain explorer | Democats.org"; 
     });
     $scope.$watch('currencies', function() {
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
@@ -254,7 +254,7 @@
 
     $scope.$watch('pools', function() {
           $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
-          $rootScope.header = $filter('capitalize')($scope.selected_pool.name) + " block " + $scope.hash + " | Democats.org"; 
+          $rootScope.window_title = $filter('capitalize')($scope.selected_pool.name) + " block " + $scope.hash + " | Democats.org"; 
     });
     $scope.$watchCollection('[selected_pool, currencies]', function() {
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
@@ -299,7 +299,7 @@
 
     $scope.$watch('pools', function() {
           $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
-          $rootScope.header = $filter('capitalize')($scope.selected_pool.name) + " transaction " + $scope.hash + " | Democats.org"; 
+          $rootScope.window_title = $filter('capitalize')($scope.selected_pool.name) + " transaction " + $scope.hash + " | Democats.org"; 
     });
     $scope.$watchCollection('[selected_pool, currencies]', function() {
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
@@ -433,7 +433,7 @@
 
     $scope.$watch('pools', function() {
           $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
-          $rootScope.header = $filter('capitalize')($scope.selected_pool.name) + " pool blocks | Democats.org"; 
+          $rootScope.window_title = $filter('capitalize')($scope.selected_pool.name) + " pool blocks | Democats.org"; 
     });
     $scope.$watchCollection('[selected_pool, currencies]', function() {
           $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
