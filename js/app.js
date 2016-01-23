@@ -4,7 +4,62 @@
            },
        };
 
-  var app = angular.module("pools", ['angularMoment', 'LocalStorageModule']);
+  var simpleChartConfig = {
+        options: {
+            chart: {
+                backgroundColor:'rgba(255, 255, 255, 0.1)',
+                height: 100,
+                width: 240,
+                zoomType: 'x'
+            },
+            rangeSelector: {
+                enabled: false
+            },
+            navigator: {
+                enabled: false
+            },
+            scrollbar : {
+                enabled : false
+            },
+            xAxis: {
+                visible: false
+            },
+            yAxis: {
+                lineWidth: 1,
+                opposite: false,
+                labels: {
+                    align: 'right',
+                    x: -5
+                }
+            }
+
+        },
+        series: [],
+        useHighStocks: true
+    };
+  var extendedChartConfig = {
+        options: {
+            chart: {
+                zoomType: 'x'
+            },
+            rangeSelector: {
+                enabled: true
+            },
+            navigator: {
+                enabled: true
+            },
+            scrollbar : {
+                enabled : true
+            }
+        },
+        series: [],
+        title: {
+            text: 'Hello'
+        },
+        useHighStocks: true
+    }
+
+  var app = angular.module("pools", ['angularMoment', 'highcharts-ng', 'LocalStorageModule']);
 
   app.directive('innerVar', function () {
     return {
@@ -17,6 +72,8 @@
       }
     };
   });
+
+
 
     app.factory('blockFactory', function($http){
         return {
@@ -94,6 +151,7 @@
     $scope.$watch('pools', function() {
         $scope.selected_pool = $filter('getByTicker')($scope.pools, "DSH");
     });
+
   }]);
 
 
@@ -403,6 +461,29 @@
   app.controller("DashboardCtl", ["$scope", "$filter", "$http", "localStorageService", "poolsFactory", "poolsStatsFactory", function($scope, $filter, $http, localStorageService, poolsFactory, poolsStatsFactory) {
     $scope.addresses = localStorageService.get("addresses") || [];
     $scope.addresses_stats = [];
+
+    $scope.chartConfig = simpleChartConfig;
+
+    $scope.chartConfig.series.push({
+        id: 1,
+        data: [
+            [1147651200000, 23.15],
+            [1147737600000, 23.01],
+            [1147824000000, 22.73],
+            [1147910400000, 22.83],
+            [1147996800000, 22.56],
+            [1148256000000, 22.88],
+            [1148342400000, 22.79],
+            [1148428800000, 23.50],
+            [1148515200000, 23.74],
+            [1148601600000, 23.72],
+            [1148947200000, 23.15],
+            [1149033600000, 22.65]
+        ]
+      }
+
+    );
+
 
     $scope.changePool = function(o) {  
       $scope.selected_pool = o;

@@ -8,6 +8,9 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+  <script src="http://code.highcharts.com/stock/highstock.src.js"></script>
+  <script src="/dist/highcharts-ng.min.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/1.0.0-beta.3/angular-moment.min.js"></script>
   <script src="/dist/angular-local-storage.min.js"></script>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
@@ -55,7 +58,15 @@
 <div class="container" ng-controller="TransactionDetailsCtl">
    <noscript></noscript>
    <div class="main-app-container">
-                  <div class="stats-and-search-block">
+                        <a href="/pool-blocks/?name={{currency_name}}" class="btn btn-info pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=" /><span>Pool blocks</span></a>
+
+               <a href="/blockchain/?name={{currency_name}}" class="btn btn-primary pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=" /><span>Blockchain</span></a>
+               <!--<a href="/charts/?name={{currency_name}}" class="btn btn-warning pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAVCAYAAADID4fUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAjpJREFUeNrE1k1IVFEUwPE3NpTmR4kIRhGVEFQgKcJswghBqDbRylpEq1pELQrctAoKBClIFAyiUDCQKAjyo+9sFxEVZtAio8AiKsJAQ6he/yPn0ZnDG+cNwXTgN/Pm3nfvO/fde9+bVBiGwX+ILjzHoPwoKfLFUziHHRiJCtNFTuA8MmjFTLGTkAR6sBVtNoFCpqMetf+QQB8asNMnsBCyMPPI4AOmsSvB+VYJLuIRKlzduug4Xydy0U/63YK36EFZggSW4DIeYLmrO4l5tOZL4qDegYwpW4FBvEJTngQGcMclkEJX+Ddm0ZirE8n0DTbmqG/XO9Sht9wncAVjLgEpvxBmx22Ux42gF89Q5+r2otr8Xov7eKjHUpbGEEZRas5dqonZuK7lWdMhja7hLirdLTyjDd9H82gWXofelQO4iptR56pMy2z064CzFqaMcFyztR2kdXHZ+KXzusyc14hJ3HDtK3Vh2ujWgQU2iTWYwFlXWY6RMHe8wBY3YptADZ64Nqfj1ph83MNxV1GLx66DSxh2ZT9wzI8Mq/DSnPcbJ3LtpiBmz2/Aa3exU2Z9HMGcq7+lF5Zz1mPK1P3EocWeKb5A5vaj6+BwTMNNeOoS+Yyj+mSNYl63c5A0CVn1300HMto9izSW+e/UhRoX0n53ksd7dLBfs47iK7YlfD9sxzuXwIyWB0mTqNJ9HppnweYCX1Qr9XEu8QXNhbS3b8pZ3aqrC0zA2ue2bSIp8x+zBRP4Vuw/nH8EGAD6cW7pH7wFVgAAAABJRU5ErkJggg=="><span>Charts</span></a>
+                -->
+
+         <section class="blockchain">
+            <div>
+                        <div class="stats-and-search-block">
             <form class="form-inline search" autocomplete="off" novalidate="">
                <div class="form-group cc-stats"><span class="cc-stats-header">Blockchain height</span><br /><span class="cc-stats-value">{{selected_pool_stats.height}}</span></div>
                <div class="form-group cc-stats"><span class="cc-stats-header">Coins emitted</span><br /><span class="cc-stats-value">{{coins_emitted|quantityValue:1}} {{coins_emitted|quantityUnits}}</span></div>
@@ -64,15 +75,7 @@
                <div class="form-group search-block" ng-controller="SearchBlockchainCtl"><input placeholder="block hash / transaction hash" class="input-large form-control" ng-model="search" /><button type="submit" class="btn btn-success" ng-click="searchFor(search)">Search</button></div>
             </form>
          </div>
-
-         <section class="blockchain">
-            <div>
-               <h1>               <a href="/pool-blocks/?name={{currency_name}}" class="btn btn-info pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=" /><span>Pool blocks</span></a>
-
-               <a href="/blockchain/?name={{currency_name}}" class="btn btn-primary pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=" /><span>Blockchain</span></a>
-               <!--<a href="/charts/?name={{currency_name}}" class="btn btn-warning pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAVCAYAAADID4fUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAjpJREFUeNrE1k1IVFEUwPE3NpTmR4kIRhGVEFQgKcJswghBqDbRylpEq1pELQrctAoKBClIFAyiUDCQKAjyo+9sFxEVZtAio8AiKsJAQ6he/yPn0ZnDG+cNwXTgN/Pm3nfvO/fde9+bVBiGwX+ILjzHoPwoKfLFUziHHRiJCtNFTuA8MmjFTLGTkAR6sBVtNoFCpqMetf+QQB8asNMnsBCyMPPI4AOmsSvB+VYJLuIRKlzduug4Xydy0U/63YK36EFZggSW4DIeYLmrO4l5tOZL4qDegYwpW4FBvEJTngQGcMclkEJX+Ddm0ZirE8n0DTbmqG/XO9Sht9wncAVjLgEpvxBmx22Ux42gF89Q5+r2otr8Xov7eKjHUpbGEEZRas5dqonZuK7lWdMhja7hLirdLTyjDd9H82gWXofelQO4iptR56pMy2z064CzFqaMcFyztR2kdXHZ+KXzusyc14hJ3HDtK3Vh2ujWgQU2iTWYwFlXWY6RMHe8wBY3YptADZ64Nqfj1ph83MNxV1GLx66DSxh2ZT9wzI8Mq/DSnPcbJ3LtpiBmz2/Aa3exU2Z9HMGcq7+lF5Zz1mPK1P3EocWeKb5A5vaj6+BwTMNNeOoS+Yyj+mSNYl63c5A0CVn1300HMto9izSW+e/UhRoX0n53ksd7dLBfs47iK7YlfD9sxzuXwIyWB0mTqNJ9HppnweYCX1Qr9XEu8QXNhbS3b8pZ3aqrC0zA2ue2bSIp8x+zBRP4Vuw/nH8EGAD6cW7pH7wFVgAAAABJRU5ErkJggg=="><span>Charts</span></a>
-                --><br />
-               <span>{{currency_name | capitalize}}</span><span> transaction </span></h1>
+               <h1><span>{{currency_name | capitalize}}</span><span> transaction </span></h1>
 
                <div>
                   <table class="table dic">
@@ -199,14 +202,15 @@
                      </tbody>
                   </table>
                </div>
-
-         
+            </div>
+         </section>
    </div>
-
+</div>
 
 <script src="/js/scripts.js"></script>
+
 <script src="/js/app.js"></script>
-</section></div></div>
+
 
 
   
