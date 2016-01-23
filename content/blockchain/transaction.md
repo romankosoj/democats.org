@@ -8,12 +8,12 @@ layout: default
 <div class="container" ng-controller="TransactionDetailsCtl">
    <noscript></noscript>
    <div class="main-app-container">
-         <%= render 'blockchain-header' %>
+         <%= render 'blockchain-links' %>
 
          <section class="blockchain">
             <div>
-               <h1><%= render 'blockchain-links' %><br/>
-               <span>{{currency_name | capitalize}}</span><span> transaction </span></h1>
+               <%= render 'blockchain-header' %>
+               <h1><span>{{currency_name | capitalize}}</span><span> transaction </span></h1>
 
                <div>
                   <table class="table dic">
@@ -140,7 +140,7 @@ layout: default
                      </tbody>
                   </table>
                </div>
-
+            </div>
          </section>
    </div>
 </div>

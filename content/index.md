@@ -11,6 +11,7 @@ layout: default
         <h1>Cryptonote pool for Forknote compatible currencies</h1>
      </div>
    </div>
+   
    <div class="row">
       <div class="col-xs-8 topmargin">
           <div class="currencies">

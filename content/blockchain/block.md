@@ -8,13 +8,15 @@ layout: default
 <div class="container" ng-controller="BlockDetailsCtl">
    <noscript></noscript>
    <div class="main-app-container">
-         <%= render 'blockchain-header' %>
+         <%= render 'blockchain-links' %>
 
          <section class="blockchain">
             <div>
-               <h1><%= render 'blockchain-links' %><br/>
-               <span>{{currency_name | capitalize}}</span><span> block </span><small>{{block.hash}}</small></h1>
-                     <table class="table dic">
+               <%= render 'blockchain-header' %>
+               <h1><span>{{currency_name | capitalize}}</span><span> block </span><small>{{block.hash}}</small></h1>
+
+               <div>
+        <table class="table dic">
          <tbody>
             <tr>
                <td><span>Height</span><a data-hint="Block index in the chain, counting from zero (i.e. genesis block)." class="hint--right hint--rounded hint--tooltip circle">?</a></td>
@@ -163,6 +165,9 @@ layout: default
             </tr>
          </tbody>
       </table>
+
+                  </div>
+               </div>
          </section>
    </div>
 </div>

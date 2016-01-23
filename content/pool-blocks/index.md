@@ -9,12 +9,11 @@ layout: default
    <noscript></noscript>
    <div class="main-app-container">
       <div class="container">
-         <%= render 'pool-blocks-header' %>
-
+         <%= render 'blockchain-links' %>
          <section class="blockchain">
             <div>
-               <h1><%= render 'blockchain-links' %><br/>
-               <span><span>{{currency_name | capitalize}}</span><span> </span><span>pool blocks</span></span></h1>
+               <%= render 'pool-blocks-header' %>
+               <h1><span><span>{{currency_name | capitalize}}</span><span> </span><span>pool blocks</span></span></h1>
                <div>
                   <table class="table">
                      <thead>

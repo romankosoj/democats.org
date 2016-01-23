@@ -8,11 +8,12 @@ layout: default
 <div class="container" ng-controller="BlocksListCtl">
    <noscript></noscript>
    <div class="main-app-container">
-         <%= render 'blockchain-header' %>
+         <%= render 'blockchain-links' %>
 
          <section class="blockchain">
             <div>
-               <h1><%= render 'blockchain-links' %><br/>
+               <%= render 'blockchain-header' %>
+               <h1>
                <span><span>{{currency_name | capitalize}}</span><span> </span><span>blockchain</span></span></h1>
                <div>
                   <ul class="pager">
