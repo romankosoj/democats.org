@@ -1,6 +1,6 @@
 <html ng-app="pools">
 <head>
-  <title ng-bind="window_title || 'Cryptonote blockchain explorer | Democats.org'">Cryptonote blockchain explorer | Democats.org</title>
+  <title ng-bind="window_title || 'Cryptonote charts | Democats.org'">Cryptonote charts | Democats.org</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -55,75 +55,42 @@
 </header>
 
   
-<div class="container" ng-controller="BlocksListCtl">
+<div class="container" ng-controller="BlockchainChartsCtl">
    <noscript></noscript>
    <div class="main-app-container">
+      <div class="container">
                         <a href="/pool-blocks/?name={{currency_name}}" class="btn btn-info pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=" /><span>Pool blocks</span></a>
 
                <a href="/blockchain/?name={{currency_name}}" class="btn btn-primary pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=" /><span>Blockchain</span></a>
                <!--<a href="/charts/?name={{currency_name}}" class="btn btn-warning pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAVCAYAAADID4fUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAjpJREFUeNrE1k1IVFEUwPE3NpTmR4kIRhGVEFQgKcJswghBqDbRylpEq1pELQrctAoKBClIFAyiUDCQKAjyo+9sFxEVZtAio8AiKsJAQ6he/yPn0ZnDG+cNwXTgN/Pm3nfvO/fde9+bVBiGwX+ILjzHoPwoKfLFUziHHRiJCtNFTuA8MmjFTLGTkAR6sBVtNoFCpqMetf+QQB8asNMnsBCyMPPI4AOmsSvB+VYJLuIRKlzduug4Xydy0U/63YK36EFZggSW4DIeYLmrO4l5tOZL4qDegYwpW4FBvEJTngQGcMclkEJX+Ddm0ZirE8n0DTbmqG/XO9Sht9wncAVjLgEpvxBmx22Ux42gF89Q5+r2otr8Xov7eKjHUpbGEEZRas5dqonZuK7lWdMhja7hLirdLTyjDd9H82gWXofelQO4iptR56pMy2z064CzFqaMcFyztR2kdXHZ+KXzusyc14hJ3HDtK3Vh2ujWgQU2iTWYwFlXWY6RMHe8wBY3YptADZ64Nqfj1ph83MNxV1GLx66DSxh2ZT9wzI8Mq/DSnPcbJ3LtpiBmz2/Aa3exU2Z9HMGcq7+lF5Zz1mPK1P3EocWeKb5A5vaj6+BwTMNNeOoS+Yyj+mSNYl63c5A0CVn1300HMto9izSW+e/UhRoX0n53ksd7dLBfs47iK7YlfD9sxzuXwIyWB0mTqNJ9HppnweYCX1Qr9XEu8QXNhbS3b8pZ3aqrC0zA2ue2bSIp8x+zBRP4Vuw/nH8EGAD6cW7pH7wFVgAAAABJRU5ErkJggg=="><span>Charts</span></a>
                 -->
-
          <section class="blockchain">
             <div>
-               <div class="stats-and-search-block">
-    <form class="form-inline search" autocomplete="off" novalidate="">
-        <div class="form-group cc-stats"><span class="cc-stats-header">Blockchain height</span>
-            <br /><span class="cc-stats-value">{{selected_pool_stats.height}}</span></div>
-        <div class="form-group cc-stats"><span class="cc-stats-header">Coins emitted</span>
-            <br /><span class="cc-stats-value">{{coins_emitted|quantityValue:1}} {{coins_emitted|quantityUnits}}</span></div>
-        <div class="form-group cc-stats"><span class="cc-stats-header">Difficulty</span>
-            <br /><span class="cc-stats-value">{{selected_pool_stats.difficulty|quantityValue}} {{selected_pool_stats.difficulty|quantityUnits}}</span></div>
-        <div class="form-group cc-stats"><span class="cc-stats-header">Network hashrate</span>
-            <br /><span class="cc-stats-value">{{selected_pool_stats.world_hashrate|hashrateValue}} {{selected_pool_stats.world_hashrate|hashrateUnits}}/s</span></div>
-        <div class="form-group search-block" ng-controller="SearchBlockchainCtl">
-            <input placeholder="block height / block hash / transaction hash" class="input-large form-control" ng-model="search" />
-            <button type="submit" class="btn btn-success" ng-click="searchFor(search)">Search</button>
-        </div>
-    </form>
-</div>
+               
+         <div class="stats-and-search-block">
+            <form class="form-inline search" autocomplete="off" novalidate="">
+               <div class="form-group cc-stats"><span class="cc-stats-header">Last found block</span><br /><span class="cc-stats-value">{{last_found_block}}</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Blockchain height</span><br /><span class="cc-stats-value">{{selected_pool_stats.height}}</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Pool hashrate</span><br /><span class="cc-stats-value">{{selected_pool_stats.pool_hashrate|hashrateValue}} {{selected_pool_stats.pool_hashrate|hashrateUnits}}/s</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Network hashrate</span><br /><span class="cc-stats-value">{{selected_pool_stats.world_hashrate|hashrateValue}} {{selected_pool_stats.world_hashrate|hashrateUnits}}/s</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Total payments</span><br /><span class="cc-stats-value">{{selected_pool_stats.total_payments}}</span></div>
+               <div class="form-group cc-stats"><span class="cc-stats-header">Total miners paid</span><br /><span class="cc-stats-value">{{selected_pool_stats.total_miners_paid}}</span></div>
+            </form>
+         </div>
 
-               <h1>
-               <span><span>{{currency_name | capitalize}}</span><span> </span><span>blockchain</span></span></h1>
-               <div>
-                  <ul class="pager">
-                     <li class="previous" ng-if="prev_block_1 != prev_block_2"><a ng-click="changeHeight(prev_block_2)"><span class="arrow-left">&lt;</span> <span>{{prev_block_1}}</span><span> - </span><span>{{prev_block_2}}</span></a></li>
-                     <li class="next" ng-if="next_block_1 != next_block_2"><a ng-click="changeHeight(next_block_2)"><span>{{next_block_1}}</span><span> - </span><span>{{next_block_2}}</span> <span class="arrow-right">&gt;</span></a></li>
-                  </ul>
-                  <table class="table">
-                     <thead>
-                        <tr>
-                           <th>Height</th>
-                           <th>Timestamp (UTC)</th>
-                           <th class="text-center">Size</th>
-                           <th class="text-center">Transactions</th>
-                           <th>Hash</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        <tr ng-repeat="block in blocks">
-                           <td><a href="/blockchain/block/?name={{currency_name}}&amp;hash={{block.hash}}">{{block.height}}</a></td>
-                           <td><span><span>{{ block.timestamp | amFromUnix | amUtc | amDateFormat:'YYYY-MM-DD HH:mm:ss' }}</span></span><span> (</span><span>{{block.timestamp | amFromUnix | amUtc | timeAgo}}</span><span>)</span></td>
-                           <td class="text-center">{{block.cumul_size}}</td>
-                           <td class="text-center">{{block.tx_count}}</td>
-                           <td><a href="/blockchain/block/?name={{currency_name}}&amp;hash={{block.hash}}">{{block.hash}}</a></td>
-                        </tr>
-                     </tbody>
-                  </table>
-                  <ul class="pager">
-                     <li class="previous" ng-if="prev_block_1 != prev_block_2"><a ng-click="changeHeight(prev_block_2)"><span class="arrow-left">&lt;</span> <span>{{prev_block_1}}</span><span> - </span><span>{{prev_block_2}}</span></a></li>
-                     <li class="next" ng-if="next_block_1 != next_block_2"><a ng-click="changeHeight(next_block_2)"><span>{{next_block_1}}</span><span> - </span><span>{{next_block_2}}</span> <span class="arrow-right">&gt;</span></a></li>
-                  </ul>
-               </div>
-            </div>
-         </section>
-   </div>
-</div>
+        <div class="row">
+            <highchart id="chart1" config="chartConfig" class="span6"></highchart>
+        </div>
+
+               <h1><span><span>{{currency_name | capitalize}}</span><span> </span><span>pool blocks</span></span></h1>
+
+      </div>
+   
+
 
 <script src="/js/scripts.js"></script>
-
 <script src="/js/app.js"></script>
-
+</section></div></div></div>
 
 
   
