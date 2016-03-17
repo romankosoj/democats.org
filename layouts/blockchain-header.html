@@ -1,9 +1,16 @@
-         <div class="stats-and-search-block">
-            <form class="form-inline search" autocomplete="off" novalidate="">
-               <div class="form-group cc-stats"><span class="cc-stats-header">Blockchain height</span><br><span class="cc-stats-value">{{selected_pool_stats.height}}</span></div>
-               <div class="form-group cc-stats"><span class="cc-stats-header">Coins emitted</span><br><span class="cc-stats-value">{{coins_emitted|quantityValue:1}} {{coins_emitted|quantityUnits}}</span></div>
-               <div class="form-group cc-stats"><span class="cc-stats-header">Difficulty</span><br><span class="cc-stats-value">{{selected_pool_stats.difficulty|quantityValue}} {{selected_pool_stats.difficulty|quantityUnits}}</span></div>
-               <div class="form-group cc-stats"><span class="cc-stats-header">Network hashrate</span><br><span class="cc-stats-value">{{selected_pool_stats.world_hashrate|hashrateValue}} {{selected_pool_stats.world_hashrate|hashrateUnits}}/s</span></div>
-               <div class="form-group search-block" ng-controller="SearchBlockchainCtl"><input placeholder="block hash / transaction hash" class="input-large form-control" ng-model="search"><button type="submit" class="btn btn-success" ng-click="searchFor(search)">Search</button></div>
-            </form>
-         </div>
+<div class="stats-and-search-block">
+    <form class="form-inline search" autocomplete="off" novalidate="">
+        <div class="form-group cc-stats"><span class="cc-stats-header">Blockchain height</span>
+            <br><span class="cc-stats-value">{{selected_pool_stats.height}}</span></div>
+        <div class="form-group cc-stats"><span class="cc-stats-header">Coins emitted</span>
+            <br><span class="cc-stats-value">{{coins_emitted|quantityValue:1}} {{coins_emitted|quantityUnits}}</span></div>
+        <div class="form-group cc-stats"><span class="cc-stats-header">Difficulty</span>
+            <br><span class="cc-stats-value">{{selected_pool_stats.difficulty|quantityValue}} {{selected_pool_stats.difficulty|quantityUnits}}</span></div>
+        <div class="form-group cc-stats"><span class="cc-stats-header">Network hashrate</span>
+            <br><span class="cc-stats-value">{{selected_pool_stats.world_hashrate|hashrateValue}} {{selected_pool_stats.world_hashrate|hashrateUnits}}/s</span></div>
+        <div class="form-group search-block" ng-controller="SearchBlockchainCtl">
+            <input placeholder="block height / block hash / transaction hash" class="input-large form-control" ng-model="search">
+            <button type="submit" class="btn btn-success" ng-click="searchFor(search)">Search</button>
+        </div>
+    </form>
+</div>

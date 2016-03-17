@@ -13,6 +13,7 @@ layout: default
          <section class="blockchain">
             <div>
                <%= render 'pool-blocks-header' %>
+
                <h1><span><span>{{currency_name | capitalize}}</span><span> </span><span>pool blocks</span></span></h1>
                <div>
                   <table class="table">
