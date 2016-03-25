@@ -41,12 +41,17 @@
          <div class="row">
             <div class="col-xs-2">
                <div class="navbar-header">
-                  <div class="logo-wrapper"><a href="/">Democats</a></div>
+                  <div class="logo-wrapper"><a target="_self" href="/">Democats</a></div>
                </div>
             </div>
             <div class="col-xs-10">
                <div class="nav navbar-nav">
-                  <div class="links pull-left"><span class="iconed-part"><a class="iconed iconed-dashboard" href="/dashboard/">Dashboard</a><a class="iconed iconed-stats" href="/">Pools</a></span></div>
+                  <div class="links pull-left"><span class="iconed-part">
+                  <a target="_self" class="" href="/dashboard/">Dashboard</a>
+                  <a target="_self" class="" href="/">Pools</a>
+                  <a target="_self" class="" href="/blockchain/?name=dashcoin">Blockchains</a>
+                  <a target="_self" class="" href="/charts/?name=dashcoin">Charts</a>
+                  </span></div>
                </div>
             </div>
          </div>
@@ -58,11 +63,17 @@
 <div class="container" ng-controller="BlocksListCtl">
    <noscript></noscript>
    <div class="main-app-container">
-                        <a href="/pool-blocks/?name={{currency_name}}" class="btn btn-info pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=" /><span>Pool blocks</span></a>
+                        <a target="_self" href="/pool-blocks/?name={{currency_name}}" class="btn btn-info pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=" /><span>Pool blocks</span></a>
 
-               <a href="/blockchain/?name={{currency_name}}" class="btn btn-primary pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=" /><span>Blockchain</span></a>
-               <!--<a href="/charts/?name={{currency_name}}" class="btn btn-warning pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAVCAYAAADID4fUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAjpJREFUeNrE1k1IVFEUwPE3NpTmR4kIRhGVEFQgKcJswghBqDbRylpEq1pELQrctAoKBClIFAyiUDCQKAjyo+9sFxEVZtAio8AiKsJAQ6he/yPn0ZnDG+cNwXTgN/Pm3nfvO/fde9+bVBiGwX+ILjzHoPwoKfLFUziHHRiJCtNFTuA8MmjFTLGTkAR6sBVtNoFCpqMetf+QQB8asNMnsBCyMPPI4AOmsSvB+VYJLuIRKlzduug4Xydy0U/63YK36EFZggSW4DIeYLmrO4l5tOZL4qDegYwpW4FBvEJTngQGcMclkEJX+Ddm0ZirE8n0DTbmqG/XO9Sht9wncAVjLgEpvxBmx22Ux42gF89Q5+r2otr8Xov7eKjHUpbGEEZRas5dqonZuK7lWdMhja7hLirdLTyjDd9H82gWXofelQO4iptR56pMy2z064CzFqaMcFyztR2kdXHZ+KXzusyc14hJ3HDtK3Vh2ujWgQU2iTWYwFlXWY6RMHe8wBY3YptADZ64Nqfj1ph83MNxV1GLx66DSxh2ZT9wzI8Mq/DSnPcbJ3LtpiBmz2/Aa3exU2Z9HMGcq7+lF5Zz1mPK1P3EocWeKb5A5vaj6+BwTMNNeOoS+Yyj+mSNYl63c5A0CVn1300HMto9izSW+e/UhRoX0n53ksd7dLBfs47iK7YlfD9sxzuXwIyWB0mTqNJ9HppnweYCX1Qr9XEu8QXNhbS3b8pZ3aqrC0zA2ue2bSIp8x+zBRP4Vuw/nH8EGAD6cW7pH7wFVgAAAABJRU5ErkJggg=="><span>Charts</span></a>
-                -->
+               <a target="_self" href="/blockchain/?name={{currency_name}}" class="btn btn-primary pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=" /><span>Blockchain</span></a>
+               <a target="_self" href="/charts/?name={{currency_name}}" class="btn btn-warning pull-left add-space"><img class="small-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAVCAYAAADID4fUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAjpJREFUeNrE1k1IVFEUwPE3NpTmR4kIRhGVEFQgKcJswghBqDbRylpEq1pELQrctAoKBClIFAyiUDCQKAjyo+9sFxEVZtAio8AiKsJAQ6he/yPn0ZnDG+cNwXTgN/Pm3nfvO/fde9+bVBiGwX+ILjzHoPwoKfLFUziHHRiJCtNFTuA8MmjFTLGTkAR6sBVtNoFCpqMetf+QQB8asNMnsBCyMPPI4AOmsSvB+VYJLuIRKlzduug4Xydy0U/63YK36EFZggSW4DIeYLmrO4l5tOZL4qDegYwpW4FBvEJTngQGcMclkEJX+Ddm0ZirE8n0DTbmqG/XO9Sht9wncAVjLgEpvxBmx22Ux42gF89Q5+r2otr8Xov7eKjHUpbGEEZRas5dqonZuK7lWdMhja7hLirdLTyjDd9H82gWXofelQO4iptR56pMy2z064CzFqaMcFyztR2kdXHZ+KXzusyc14hJ3HDtK3Vh2ujWgQU2iTWYwFlXWY6RMHe8wBY3YptADZ64Nqfj1ph83MNxV1GLx66DSxh2ZT9wzI8Mq/DSnPcbJ3LtpiBmz2/Aa3exU2Z9HMGcq7+lF5Zz1mPK1P3EocWeKb5A5vaj6+BwTMNNeOoS+Yyj+mSNYl63c5A0CVn1300HMto9izSW+e/UhRoX0n53ksd7dLBfs47iK7YlfD9sxzuXwIyWB0mTqNJ9HppnweYCX1Qr9XEu8QXNhbS3b8pZ3aqrC0zA2ue2bSIp8x+zBRP4Vuw/nH8EGAD6cW7pH7wFVgAAAABJRU5ErkJggg==" /><span>Charts</span></a>
+
+                <div class="btn-group rates pull-right add-space">
+                               <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="0"><span class="ng-binding">{{selected_pool.name}}</span><span class="caret"></span></button>
+                               <ul class="dropdown-menu" role="menu">
+                                  <li ng-repeat="pool in pools | orderBy: 'name'"><a class="dropdown-menu__entry" ng-click="changeCurrency(pool)">{{pool.name}}</a></li>
+                               </ul>
+                </div>
 
          <section class="blockchain">
             <div>
@@ -102,11 +113,11 @@
                      </thead>
                      <tbody>
                         <tr ng-repeat="block in blocks">
-                           <td><a href="/blockchain/block/?name={{currency_name}}&amp;hash={{block.hash}}">{{block.height}}</a></td>
+                           <td><a target="_self" href="/blockchain/block/?name={{currency_name}}&amp;hash={{block.hash}}">{{block.height}}</a></td>
                            <td><span><span>{{ block.timestamp | amFromUnix | amUtc | amDateFormat:'YYYY-MM-DD HH:mm:ss' }}</span></span><span> (</span><span>{{block.timestamp | amFromUnix | amUtc | timeAgo}}</span><span>)</span></td>
                            <td class="text-center">{{block.cumul_size}}</td>
                            <td class="text-center">{{block.tx_count}}</td>
-                           <td><a href="/blockchain/block/?name={{currency_name}}&amp;hash={{block.hash}}">{{block.hash}}</a></td>
+                           <td><a target="_self" href="/blockchain/block/?name={{currency_name}}&amp;hash={{block.hash}}">{{block.hash}}</a></td>
                         </tr>
                      </tbody>
                   </table>
@@ -133,9 +144,9 @@
          <div class="container">
             <div class="collapse navbar-collapse">
                <ul class="nav navbar-nav navbar-right">
-                  <li class="copy"><a href="/terms-of-use/">Terms of Use</a></li>
-                  <li class="copy"><a href="/support/">Support</a></li>
-                  <li class="copy"><a href="/"><span>© </span><span>2015</span><span> Democats</span></a></li>
+                  <li class="copy"><a target="_self" href="/terms-of-use/">Terms of Use</a></li>
+                  <li class="copy"><a target="_self" href="/support/">Support</a></li>
+                  <li class="copy"><a target="_self" href="/"><span>© </span><span>2015</span><span> Democats</span></a></li>
                </ul>
             </div>
          </div>
