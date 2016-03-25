@@ -27,10 +27,10 @@ layout: default
                      </thead>
                      <tbody>
                         <tr ng-repeat="block in blocks" ng-class="{success: block.status == 'unlocked', error: block.status == 'orphaned'}">
-                           <td><a href="/blockchain/block/?name={{currency_name}}&hash={{block.hash}}">{{block.height}}</a></td>
+                           <td><a target="_self" href="/blockchain/block/?name={{currency_name}}&hash={{block.hash}}">{{block.height}}</a></td>
                            <td><span><span>{{ block.timestamp | amFromUnix | amUtc | amDateFormat:'YYYY-MM-DD HH:mm:ss' }}</span></span><span> (</span><span>{{block.timestamp | amFromUnix | amUtc | timeAgo}}</span><span>)</span></td>
                            <td class="text-center">{{block.status | capitalize}}</td>
-                           <td><a href="/blockchain/block/?name={{currency_name}}&hash={{block.hash}}">{{block.hash}}</a></td>
+                           <td><a target="_self" href="/blockchain/block/?name={{currency_name}}&hash={{block.hash}}">{{block.hash}}</a></td>
                         </tr>
                      </tbody>
                   </table>

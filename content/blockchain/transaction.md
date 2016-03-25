@@ -7,7 +7,7 @@ layout: default
 
 <div class="container" ng-controller="TransactionDetailsCtl">
    <noscript></noscript>
-   <div class="main-app-container">
+   <div class="main-app-container" ng-if="transaction">
          <%= render 'blockchain-links' %>
 
          <section class="blockchain">
@@ -74,7 +74,7 @@ layout: default
                                  <span>?</span>
                               </a>
                            </td>
-                           <td><a href="/blockchain/bcn/paymentid/25616d5a2465d250f1a34258a34caced25e923348aa5cf6b01f534ed82a3f901">{{transaction.txDetails.paymentId}}</a></td>
+                           <td><a target="_self" href="/blockchain/bcn/paymentid/25616d5a2465d250f1a34258a34caced25e923348aa5cf6b01f534ed82a3f901">{{transaction.txDetails.paymentId}}</a></td>
                         </tr>
                         <tr>
                            <td>
@@ -93,7 +93,7 @@ layout: default
                      <tbody>
                         <tr>
                            <td>Hash</td>
-                           <td><a href="/blockchain/block/?name={{currency_name}}&hash={{transaction.block.hash}}">{{transaction.block.hash}}</a></td>
+                           <td><a target="_self" href="/blockchain/block/?name={{currency_name}}&hash={{transaction.block.hash}}">{{transaction.block.hash}}</a></td>
                         </tr>
                         <tr>
                            <td>Height</td>
@@ -142,6 +142,19 @@ layout: default
                </div>
             </div>
          </section>
+   </div>
+
+   <div class="main-app-container" ng-if="!transaction">
+      <%= render 'blockchain-links' %>
+
+      <section class="blockchain">
+         <div>
+            <%= render 'blockchain-header' %>
+            <h1><span>{{currency_name | capitalize}}</span><span> transaction </span><small>{{hash}}</small><br />
+            <small>not found</small></h1>
+
+          </div>
+      </section>
    </div>
 </div>
 

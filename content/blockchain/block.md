@@ -7,7 +7,7 @@ layout: default
 
 <div class="container" ng-controller="BlockDetailsCtl">
    <noscript></noscript>
-   <div class="main-app-container">
+   <div class="main-app-container" ng-if="block">
          <%= render 'blockchain-links' %>
 
          <section class="blockchain">
@@ -20,7 +20,7 @@ layout: default
          <tbody>
             <tr>
                <td><span>Height</span><a data-hint="Block index in the chain, counting from zero (i.e. genesis block)." class="hint--right hint--rounded hint--tooltip circle">?</a></td>
-               <td><a ng-click="changeBlock(block.prev_hash)" class="page">&lt;</a><span>{{block.height}}</span><a ng-if="block.height != height" ng-click="changeBlock(block.next_hash)" class="page">&gt;</a></td>
+               <td><a target="_self" ng-click="changeBlock(block.prev_hash)" class="page">&lt;</a><span>{{block.height}}</span><a ng-if="block.height != height" ng-click="changeBlock(block.next_hash)" class="page">&gt;</a></td>
             </tr>
             <tr>
                <td>
@@ -158,7 +158,7 @@ layout: default
          </thead>
          <tbody>
             <tr ng-repeat="transaction in block.transactions">
-               <td><a href="/blockchain/transaction/?name={{currency_name}}&hash={{transaction.hash}}">{{transaction.hash}}</a></td>
+               <td><a target="_self" href="/blockchain/transaction/?name={{currency_name}}&hash={{transaction.hash}}">{{transaction.hash}}</a></td>
                <td>{{transaction.fee | asCoinUnits:selected_pool_stats.coin_units | number: coin_unit_fraction}}</td>
                <td>{{transaction.amount_out | asCoinUnits:selected_pool_stats.coin_units | number: coin_unit_fraction}}</td>
                <td>{{transaction.size}}</td>
@@ -170,6 +170,20 @@ layout: default
                </div>
          </section>
    </div>
+
+   <div class="main-app-container" ng-if="!block">
+      <%= render 'blockchain-links' %>
+
+      <section class="blockchain">
+         <div>
+            <%= render 'blockchain-header' %>
+            <h1><span>{{currency_name | capitalize}}</span><span> block </span><small>{{hash}}</small><br />
+            <small>not found</small></h1>
+
+          </div>
+      </section>
+   </div>
+
 </div>
 
 <script src="/js/scripts.js"></script>

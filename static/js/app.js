@@ -3,6 +3,7 @@ var http_config = {
         'Content-Type': undefined
     },
 };
+var divider = 0;
 
 
 var app = angular.module("pools", ['angularMoment', 'highcharts-ng', 'LocalStorageModule']);
@@ -20,6 +21,14 @@ app.directive('innerVar', function() {
 });
 
 
+app.factory('HeaderService', function($window, $location, $rootScope) {
+  return {
+    changeCurrency: function(o) {
+        $location.search("name", o.name);
+        $window.location.href = $location.absUrl();
+    }
+  };
+});
 
 app.factory('blockFactory', function($http) {
     return {
@@ -101,8 +110,12 @@ app.controller("MainCtl", ["$scope", "$filter", "poolsFactory", "poolsStatsFacto
 }]);
 
 
-app.controller("BlocksListCtl", ["$rootScope", "$scope", "$filter", "$http", "poolsFactory", "poolsStatsFactory", "blockFactory", function($rootScope, $scope, $filter, $http, poolsFactory, poolsStatsFactory, blockFactory) {
-    $scope.currency_name = urlParam('name');
+app.controller("BlocksListCtl", ["$rootScope", "$scope", "$filter", "$http", "HeaderService", "poolsFactory", "poolsStatsFactory", "blockFactory", function($rootScope, $scope, $filter, $http, HeaderService, poolsFactory, poolsStatsFactory, blockFactory) {
+    $scope.currency_name = $filter('lowercase')(urlParam('name'));
+
+    $scope.changeCurrency = function(o) {
+      HeaderService.changeCurrency(o);
+    }
 
     $scope.getBlocks = function(height) {
         var data = JSON.stringify({
@@ -156,9 +169,13 @@ app.controller("BlocksListCtl", ["$rootScope", "$scope", "$filter", "$http", "po
     });
 }]);
 
-app.controller("BlockDetailsCtl", ["$rootScope", "$scope", "$filter", "$http", "poolsFactory", "poolsStatsFactory", "blockFactory", function($rootScope, $scope, $filter, $http, poolsFactory, poolsStatsFactory, blockFactory) {
-    $scope.currency_name = urlParam('name');
+app.controller("BlockDetailsCtl", ["$rootScope", "$scope", "$filter", "$http", "HeaderService", "poolsFactory", "poolsStatsFactory", "blockFactory", function($rootScope, $scope, $filter, $http, HeaderService, poolsFactory, poolsStatsFactory, blockFactory) {
+    $scope.currency_name = $filter('lowercase')(urlParam('name'));
     $scope.hash = urlParam('hash');
+
+    $scope.changeCurrency = function(o) {
+      HeaderService.changeCurrency(o);
+    }
 
     $scope.changeBlock = function(hash) {
         $scope.hash = hash;
@@ -223,9 +240,13 @@ app.controller("BlockDetailsCtl", ["$rootScope", "$scope", "$filter", "$http", "
 }]);
 
 
-app.controller("TransactionDetailsCtl", ["$rootScope", "$scope", "$filter", "$http", "poolsFactory", "poolsStatsFactory", "blockFactory", function($rootScope, $scope, $filter, $http, poolsFactory, poolsStatsFactory, blockFactory) {
-    $scope.currency_name = urlParam('name');
+app.controller("TransactionDetailsCtl", ["$rootScope", "$scope", "$filter", "$http", "HeaderService", "poolsFactory", "poolsStatsFactory", "blockFactory", function($rootScope, $scope, $filter, $http, HeaderService, poolsFactory, poolsStatsFactory, blockFactory) {
+    $scope.currency_name = $filter('lowercase')(urlParam('name'));
     $scope.hash = urlParam('hash');
+
+    $scope.changeCurrency = function(o) {
+      HeaderService.changeCurrency(o);
+    }
 
     $scope.getTransaction = function(hash) {
         var data = JSON.stringify({
@@ -262,61 +283,13 @@ app.controller("TransactionDetailsCtl", ["$rootScope", "$scope", "$filter", "$ht
 }]);
 
 
-
-app.controller("SearchBlockchainCtl", ["$rootScope", "$scope", "$filter", "$http", "$window", "poolsFactory", "poolsStatsFactory", "blockFactory", function($rootScope, $scope, $filter, $http, $window, poolsFactory, poolsStatsFactory, blockFactory) {
-    $scope.currency_name = urlParam('name');
-
-    $scope.getBlock = function(hash) {
-        var data = JSON.stringify({
-            jsonrpc: "2.0",
-            id: "test",
-            method: "f_block_json",
-            params: {
-                hash: hash
-            }
-        });
-
-        $http.post($scope.selected_pool.daemonrpc + "json_rpc", data, http_config).success(function(data, status) {
-            if (data.result !== undefined)
-                $window.location.href = '/blockchain/block/?name=' + $scope.currency_name + '&hash=' + hash;
-        });
-
-    }
-    $scope.getTransaction = function(hash) {
-        var data = JSON.stringify({
-            jsonrpc: "2.0",
-            id: "test",
-            method: "f_transaction_json",
-            params: {
-                hash: hash
-            }
-        });
-
-        $http.post($scope.selected_pool.daemonrpc + "json_rpc", data, http_config).success(function(data, status) {
-            if (data.result !== undefined)
-                $window.location.href = '/blockchain/transaction/?name=' + $scope.currency_name + '&hash=' + hash;
-
-        });
-
-    }
-
-    $scope.$watch('pools', function() {
-        $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
-    });
-    $scope.$watch('currencies', function() {
-        $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
-    });
-
-    $scope.searchFor = function(search) {
-        $scope.getBlock(search);
-        $scope.getTransaction(search);
-    }
-}]);
-
-
-app.controller("PoolBlocksCtl", ["$rootScope", "$scope", "$filter", "$http", "poolsFactory", "poolsStatsFactory", "blockFactory", function($rootScope, $scope, $filter, $http, poolsFactory, poolsStatsFactory, blockFactory) {
-    $scope.currency_name = urlParam('name');
+app.controller("PoolBlocksCtl", ["$rootScope", "$scope", "$filter", "$http", "HeaderService", "poolsFactory", "poolsStatsFactory", "blockFactory", function($rootScope, $scope, $filter, $http, HeaderService, poolsFactory, poolsStatsFactory, blockFactory) {
+    $scope.currency_name = $filter('lowercase')(urlParam('name'));
     $scope.blocks = [];
+
+    $scope.changeCurrency = function(o) {
+      HeaderService.changeCurrency(o);
+    }
 
     $scope.parseBlock = function(height, serializedBlock) {
         var parts = serializedBlock.split(':');
@@ -403,6 +376,58 @@ app.controller("PoolBlocksCtl", ["$rootScope", "$scope", "$filter", "$http", "po
 }]);
 
 
+
+app.controller("SearchBlockchainCtl", ["$rootScope", "$scope", "$filter", "$http", "$window", "poolsFactory", "poolsStatsFactory", "blockFactory", function($rootScope, $scope, $filter, $http, $window, poolsFactory, poolsStatsFactory, blockFactory) {
+    $scope.currency_name = $filter('lowercase')(urlParam('name'));
+
+    $scope.getBlock = function(hash) {
+        var data = JSON.stringify({
+            jsonrpc: "2.0",
+            id: "test",
+            method: "f_block_json",
+            params: {
+                hash: hash
+            }
+        });
+
+        $http.post($scope.selected_pool.daemonrpc + "json_rpc", data, http_config).success(function(data, status) {
+            if (data.result !== undefined)
+                $window.location.href = '/blockchain/block/?name=' + $scope.currency_name + '&hash=' + hash;
+        });
+
+    }
+    $scope.getTransaction = function(hash) {
+        var data = JSON.stringify({
+            jsonrpc: "2.0",
+            id: "test",
+            method: "f_transaction_json",
+            params: {
+                hash: hash
+            }
+        });
+
+        $http.post($scope.selected_pool.daemonrpc + "json_rpc", data, http_config).success(function(data, status) {
+            if (data.result !== undefined)
+                $window.location.href = '/blockchain/transaction/?name=' + $scope.currency_name + '&hash=' + hash;
+
+        });
+
+    }
+
+    $scope.$watch('pools', function() {
+        $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
+    });
+    $scope.$watch('currencies', function() {
+        $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
+    });
+
+    $scope.searchFor = function(search) {
+        $scope.getBlock(search);
+        $scope.getTransaction(search);
+    }
+}]);
+
+
 app.controller("DashboardCtl", ["$scope", "$filter", "$http", "localStorageService", "poolsFactory", "poolsStatsFactory", function($scope, $filter, $http, localStorageService, poolsFactory, poolsStatsFactory) {
     $scope.addresses = localStorageService.get("addresses") || [];
     $scope.addresses_stats = [];
@@ -480,8 +505,8 @@ app.controller("DashboardCtl", ["$scope", "$filter", "$http", "localStorageServi
 }]);
 
 
-app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "poolsFactory", "poolsStatsFactory", function($scope, $filter, $http, poolsFactory, poolsStatsFactory) {
-    $scope.currency_name = urlParam('currency');
+app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderService", "poolsFactory", "poolsStatsFactory", function($scope, $filter, $http, HeaderService, poolsFactory, poolsStatsFactory) {
+    $scope.currency_name = $filter('lowercase')(urlParam('name'));
 
     var simpleChartConfig = {
         options: {
@@ -538,39 +563,451 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "poolsFacto
         useHighStocks: true
     }
 
-    data = [];
-
-    $scope.chartConfig = {
-        options: {
-            chart: {
-                zoomType: 'x'
-            },
-            rangeSelector: {
-                enabled: true
-            },
-            navigator: {
-                enabled: true
-            }
-        },
-        title: {
-            text: 'Difficulty'
-        },
-        series: [{
-            name: 'Difficulty',
-            tooltip: {
-                valueDecimals: 0
-            }
-        }],
-        useHighStocks: true
+    $scope.changeCurrency = function(o) {
+      HeaderService.changeCurrency(o);
     }
 
-    $scope.chartConfig.series.push({
-        id: 1,
-        data: data.map(toMicrotime, data)
+    $scope.$watch('pools', function() {
+        $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
+        $rootScope.window_title = $filter('capitalize')($scope.selected_pool.name) + " charts | Democats.org";
     });
 
+    $scope.$watch('currencies', function() {
+        $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
+        divider = Math.log10($scope.selected_pool_stats.coin_units);
+    });
 
+    $scope.loadCharts = function() {
+  // Difficulty
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/difficulty_avg_1d.json')
+         .then(function(res){
+            data = res.data;
 
+          $scope.chartDifficultyConfig.series.push({
+              name : 'Difficulty',
+              data: data.map(toMicrotime, data)
+          });
+
+      });
+
+      $scope.chartDifficultyConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Difficulty'
+          },
+          series: [],
+          useHighStocks: true
+      }
+
+  // Hashrate
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/hashrate_1d.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope.chartHashrateConfig.series.push({
+              name : 'Hashrate',
+              data: data.map(toMicrotime, data),
+              tooltip: {
+                  valueDecimals: 2,
+                  valueSuffix: ' H/s'
+              }
+          });
+
+      });
+
+      $scope.chartHashrateConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Hashrate'
+          },
+          series : [],
+          useHighStocks: true
+      }
+
+  // Generated coins
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/generated_coins_1d.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope.chartGeneratedCoinsConfig.series.push({
+              name : 'Generated coins',
+              data: data.map(toMicrotimeCoins, data)
+          });
+
+      });
+
+      $scope.chartGeneratedCoinsConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Generated coins'
+          },
+          series: [],
+          useHighStocks: true
+      }
+
+  // Block reward
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/block_reward_1d.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope.chartBlockRewardConfig.series.push({
+              name : 'Block reward',
+              data : data.map(toMicrotimeCoins, data),
+              tooltip: {
+                  valueDecimals: 2
+              }
+          });
+      });
+
+      $scope.chartBlockRewardConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Block reward'
+          },
+          series: [],
+          useHighStocks: true
+      }
+
+  // Transactions count
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/transactions_count_1d.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope.chartTransactionsCountConfig.series.push({
+              name : 'Transactions count',
+              data: data.map(toMicrotime, data)
+          });
+
+      });
+
+      $scope.chartTransactionsCountConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Transactions count'
+          },
+          series: [],
+          useHighStocks: true
+      }
+
+  // Transactions fees
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/transactions_fees_1d.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope.chartTransactionsFeesConfig.series.push({
+              name : 'Transactions fees',
+              data : data.map(toMicrotimeCoins, data),
+              tooltip: {
+                  valueDecimals: 2
+              }
+          });
+
+      });
+
+      $scope.chartTransactionsFeesConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Transactions fees'
+          },
+          series: [],
+          useHighStocks: true
+      }
+
+  // Transactions outputs
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/transactions_outputs_1d.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope.chartTransactionsOutputsConfig.series.push({
+              name : 'Transactions outputs (sum)',
+              data : data.map(toMicrotimeCoins, data),
+              tooltip: {
+                  valueDecimals: 2
+              }
+          });
+
+      });
+
+      $scope.chartTransactionsOutputsConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Transactions outputs (sum)'
+          },
+          series: [],
+          useHighStocks: true
+      }
+
+  // Transactions size
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/transactions_size_avg_1d.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope.chartTransactionsSizeConfig.series.push({
+              name : 'Transactions size (avg)',
+              data: data.map(toMicrotime, data),
+              tooltip: {
+                  valueSuffix: ' bytes'
+              }
+          });
+
+      });
+
+      $scope.chartTransactionsSizeConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Transactions size (average)'
+          },
+          series: [],
+          useHighStocks: true
+      }
+
+  // Transactions fusion count
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/transactions_fusion_count_1d.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope.chartTransactionsFusionCountConfig.series.push({
+              name : 'Fusion transactions count',
+              data: data.map(toMicrotime, data)
+          });
+
+      });
+
+      $scope.chartTransactionsFusionCountConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Fusion transactions count'
+          },
+          series: [],
+          useHighStocks: true
+      }
+  // Current tx median
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/block_current_txs_median_max_1d.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope.chartBlocksCurrentTxMedianConfig.series.push({
+              name : 'Fusion transactions count',
+              data: data.map(toMicrotime, data),
+              tooltip: {
+                  valueSuffix: ' bytes'
+              }
+          });
+
+      });
+
+      $scope.chartBlocksCurrentTxMedianConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Blocks current tx median (max)'
+          },
+          series: [],
+          useHighStocks: true
+      }
+
+  // Blocks penalty percentage (avg)
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/blocks_penalty_percentage_1d.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope.chartBlocksPenaltyPercentageConfig.series.push({
+              id: 1,
+              data: data.map(toMicrotime, data),
+              tooltip: {
+                  valueSuffix: '%'
+              }
+          });
+
+      });
+
+      $scope.chartBlocksPenaltyPercentageConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Percentage of blocks with penalty'
+          },
+          series: [],
+          useHighStocks: true
+      }
+
+  // Blocks size (avg)
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/blocks_size_avg_1d.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope.chartBlocksSizeConfig.series.push({
+              id: 1,
+              data: data.map(toMicrotime, data),
+              tooltip: {
+                  valueSuffix: ' bytes'
+              }
+          });
+
+      });
+
+      $scope.chartBlocksSizeConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Blocks size (average)'
+          },
+          series: [],
+          useHighStocks: true
+      }
+
+  // Blocks time (avg)
+      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/blocks_time_avg_1d.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope.chartBlocksTimeConfig.series.push({
+              id: 1,
+              data: data.map(toMicrotime, data),
+              tooltip: {
+                  valueSuffix: ' s'
+              }
+          });
+
+      });
+
+      $scope.chartBlocksTimeConfig = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: 'Blocks time (average)'
+          },
+          series: [],
+          useHighStocks: true
+      }
+    }
+        $scope.loadCharts();
 }]);
 
 
@@ -777,6 +1214,17 @@ app.config(function(localStorageServiceProvider) {
         .setPrefix('dashboard');
 });
 
+app.config(['$locationProvider', function($locationProvider) {
+
+    $locationProvider.html5Mode(true);        
+
+}]);
+
 function toMicrotime(data) {
     return [1000 * data[0], data[1]];
+}
+
+function toMicrotimeCoins(data) {
+  console.log(divider);
+    return [1000 * data[0], data[1] / Math.pow(10, divider)];
 }
