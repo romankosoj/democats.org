@@ -507,6 +507,8 @@ app.controller("DashboardCtl", ["$scope", "$filter", "$http", "localStorageServi
 
 app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderService", "poolsFactory", "poolsStatsFactory", function($scope, $filter, $http, HeaderService, poolsFactory, poolsStatsFactory) {
     $scope.currency_name = $filter('lowercase')(urlParam('name'));
+    if (!$scope.period)
+      $scope.period = '1d';
 
     var simpleChartConfig = {
         options: {
@@ -558,7 +560,7 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
         },
         series: [],
         title: {
-            text: 'Hello'
+            text: 'Chart'
         },
         useHighStocks: true
     }
@@ -566,6 +568,44 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
     $scope.changeCurrency = function(o) {
       HeaderService.changeCurrency(o);
     }
+    $scope.createChart = function(cf, t) {
+      $scope[cf] = {
+          options: {
+              chart: {
+                  zoomType: 'x'
+              },
+              rangeSelector: {
+                  enabled: true
+              },
+              navigator: {
+                  enabled: true
+              }
+          },
+          title: {
+              text: t
+          },
+          series: [],
+          useHighStocks: true
+      }
+    };
+    $scope.pushToChart = function(c, ch, p, cf, f, n, vs, vd) {
+      var domain = 'https://raw.githubusercontent.com/democatscharts/charts/master/';
+      console.log(domain + c + '/' + ch + '_' + p + '.json');
+      $http.get(domain + c + '/' + ch + '_' + p + '.json')
+         .then(function(res){
+            data = res.data;
+
+          $scope[cf].series.push({
+              name : n,
+              data: data.map(window[f], data),
+              tooltip: {
+                  valueDecimals: vd,
+                  valueSuffix: vs
+              }
+          });
+          return $scope.chartBlocksTimeConfig;
+      });
+    };
 
     $scope.$watch('pools', function() {
         $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
@@ -578,436 +618,60 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
     });
 
     $scope.loadCharts = function() {
-  // Difficulty
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/difficulty_avg_1d.json')
-         .then(function(res){
-            data = res.data;
+      // Difficulty
+      $scope.pushToChart($scope.currency_name, 'difficulty_avg', $scope.period, 'chartDifficultyConfig', 'toMicrotime', 'Difficulty', '', 0);
+      $scope.createChart('chartDifficultyConfig', 'Difficulty');
 
-          $scope.chartDifficultyConfig.series.push({
-              name : 'Difficulty',
-              data: data.map(toMicrotime, data)
-          });
+      // Hashrate
+      $scope.pushToChart($scope.currency_name, 'hashrate', $scope.period, 'chartHashrateConfig', 'toMicrotime', 'Hashrate', ' H/s', 2);
+      $scope.createChart('chartHashrateConfig', 'Hashrate');
 
-      });
+      // Generated coins
+      $scope.pushToChart($scope.currency_name, 'generated_coins', $scope.period, 'chartGeneratedCoinsConfig', 'toMicrotimeCoins', 'Generated coins', '', 0);
+      $scope.createChart('chartGeneratedCoinsConfig', 'Generated coins');
 
-      $scope.chartDifficultyConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Difficulty'
-          },
-          series: [],
-          useHighStocks: true
-      }
+      // Block reward
+      $scope.pushToChart($scope.currency_name, 'block_reward', $scope.period, 'chartBlockRewardConfig', 'toMicrotimeCoins', 'Block reward', '', 2);
+      $scope.createChart('chartBlockRewardConfig', 'Block reward');
 
-  // Hashrate
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/hashrate_1d.json')
-         .then(function(res){
-            data = res.data;
+      // Transactions count
+      $scope.pushToChart($scope.currency_name, 'transactions_count', $scope.period, 'chartTransactionsCountConfig', 'toMicrotime', 'Transactions count', '', 0);
+      $scope.createChart('chartTransactionsCountConfig', 'Transactions count');
 
-          $scope.chartHashrateConfig.series.push({
-              name : 'Hashrate',
-              data: data.map(toMicrotime, data),
-              tooltip: {
-                  valueDecimals: 2,
-                  valueSuffix: ' H/s'
-              }
-          });
+      // Transactions fees
+      $scope.pushToChart($scope.currency_name, 'transactions_fees', $scope.period, 'chartTransactionsFeesConfig', 'toMicrotimeCoins', 'Transactions fees', '', 2);
+      $scope.createChart('chartTransactionsFeesConfig', 'Transactions fees');
 
-      });
+      // Transactions outputs
+      $scope.pushToChart($scope.currency_name, 'transactions_outputs', $scope.period, 'chartTransactionsOutputsConfig', 'toMicrotimeCoins', 'Transactions outputs (sum)', '', 2);
+      $scope.createChart('chartTransactionsOutputsConfig', 'Transactions count');
 
-      $scope.chartHashrateConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Hashrate'
-          },
-          series : [],
-          useHighStocks: true
-      }
+      // Transactions size
+      $scope.pushToChart($scope.currency_name, 'transactions_size_avg', $scope.period, 'chartTransactionsSizeConfig', 'toMicrotime', 'Transactions size (avg)', 'bytes', 0);
+      $scope.createChart('chartTransactionsSizeConfig', 'Transactions size (average)');
 
-  // Generated coins
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/generated_coins_1d.json')
-         .then(function(res){
-            data = res.data;
+      // Transactions fusion count
+      $scope.pushToChart($scope.currency_name, 'transactions_fusion_count', $scope.period, 'chartTransactionsFusionCountConfig', 'toMicrotime', 'Fusion transactions count', '', 0);
+      $scope.createChart('chartTransactionsFusionCountConfig', 'Fusion transactions count');
 
-          $scope.chartGeneratedCoinsConfig.series.push({
-              name : 'Generated coins',
-              data: data.map(toMicrotimeCoins, data)
-          });
+      // Current tx median
+      $scope.pushToChart($scope.currency_name, 'block_current_txs_median_max', $scope.period, 'chartBlocksCurrentTxMedianConfig', 'toMicrotime', 'Current tx median', ' bytes', 0);
+      $scope.createChart('chartBlocksCurrentTxMedianConfig', 'Blocks current tx median (max)');
 
-      });
+      // Blocks penalty percentage (avg)
+      $scope.pushToChart($scope.currency_name, 'blocks_penalty_percentage', $scope.period, 'chartBlocksPenaltyPercentageConfig', 'toMicrotime', 'Percentage of blocks with penalty', '%', 0);
+      $scope.createChart('chartBlocksPenaltyPercentageConfig', 'Percentage of blocks with penalty');
 
-      $scope.chartGeneratedCoinsConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Generated coins'
-          },
-          series: [],
-          useHighStocks: true
-      }
+      // Blocks size (avg)
+      $scope.pushToChart($scope.currency_name, 'blocks_size_avg', $scope.period, 'chartBlocksSizeConfig', 'toMicrotime', 'Blocks size (average)', ' bytes', 0);
+      $scope.createChart('chartBlocksSizeConfig', 'Blocks size (average)');
 
-  // Block reward
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/block_reward_1d.json')
-         .then(function(res){
-            data = res.data;
-
-          $scope.chartBlockRewardConfig.series.push({
-              name : 'Block reward',
-              data : data.map(toMicrotimeCoins, data),
-              tooltip: {
-                  valueDecimals: 2
-              }
-          });
-      });
-
-      $scope.chartBlockRewardConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Block reward'
-          },
-          series: [],
-          useHighStocks: true
-      }
-
-  // Transactions count
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/transactions_count_1d.json')
-         .then(function(res){
-            data = res.data;
-
-          $scope.chartTransactionsCountConfig.series.push({
-              name : 'Transactions count',
-              data: data.map(toMicrotime, data)
-          });
-
-      });
-
-      $scope.chartTransactionsCountConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Transactions count'
-          },
-          series: [],
-          useHighStocks: true
-      }
-
-  // Transactions fees
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/transactions_fees_1d.json')
-         .then(function(res){
-            data = res.data;
-
-          $scope.chartTransactionsFeesConfig.series.push({
-              name : 'Transactions fees',
-              data : data.map(toMicrotimeCoins, data),
-              tooltip: {
-                  valueDecimals: 2
-              }
-          });
-
-      });
-
-      $scope.chartTransactionsFeesConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Transactions fees'
-          },
-          series: [],
-          useHighStocks: true
-      }
-
-  // Transactions outputs
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/transactions_outputs_1d.json')
-         .then(function(res){
-            data = res.data;
-
-          $scope.chartTransactionsOutputsConfig.series.push({
-              name : 'Transactions outputs (sum)',
-              data : data.map(toMicrotimeCoins, data),
-              tooltip: {
-                  valueDecimals: 2
-              }
-          });
-
-      });
-
-      $scope.chartTransactionsOutputsConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Transactions outputs (sum)'
-          },
-          series: [],
-          useHighStocks: true
-      }
-
-  // Transactions size
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/transactions_size_avg_1d.json')
-         .then(function(res){
-            data = res.data;
-
-          $scope.chartTransactionsSizeConfig.series.push({
-              name : 'Transactions size (avg)',
-              data: data.map(toMicrotime, data),
-              tooltip: {
-                  valueSuffix: ' bytes'
-              }
-          });
-
-      });
-
-      $scope.chartTransactionsSizeConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Transactions size (average)'
-          },
-          series: [],
-          useHighStocks: true
-      }
-
-  // Transactions fusion count
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/transactions_fusion_count_1d.json')
-         .then(function(res){
-            data = res.data;
-
-          $scope.chartTransactionsFusionCountConfig.series.push({
-              name : 'Fusion transactions count',
-              data: data.map(toMicrotime, data)
-          });
-
-      });
-
-      $scope.chartTransactionsFusionCountConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Fusion transactions count'
-          },
-          series: [],
-          useHighStocks: true
-      }
-  // Current tx median
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/block_current_txs_median_max_1d.json')
-         .then(function(res){
-            data = res.data;
-
-          $scope.chartBlocksCurrentTxMedianConfig.series.push({
-              name : 'Fusion transactions count',
-              data: data.map(toMicrotime, data),
-              tooltip: {
-                  valueSuffix: ' bytes'
-              }
-          });
-
-      });
-
-      $scope.chartBlocksCurrentTxMedianConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Blocks current tx median (max)'
-          },
-          series: [],
-          useHighStocks: true
-      }
-
-  // Blocks penalty percentage (avg)
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/blocks_penalty_percentage_1d.json')
-         .then(function(res){
-            data = res.data;
-
-          $scope.chartBlocksPenaltyPercentageConfig.series.push({
-              id: 1,
-              data: data.map(toMicrotime, data),
-              tooltip: {
-                  valueSuffix: '%'
-              }
-          });
-
-      });
-
-      $scope.chartBlocksPenaltyPercentageConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Percentage of blocks with penalty'
-          },
-          series: [],
-          useHighStocks: true
-      }
-
-  // Blocks size (avg)
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/blocks_size_avg_1d.json')
-         .then(function(res){
-            data = res.data;
-
-          $scope.chartBlocksSizeConfig.series.push({
-              id: 1,
-              data: data.map(toMicrotime, data),
-              tooltip: {
-                  valueSuffix: ' bytes'
-              }
-          });
-
-      });
-
-      $scope.chartBlocksSizeConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Blocks size (average)'
-          },
-          series: [],
-          useHighStocks: true
-      }
-
-  // Blocks time (avg)
-      $http.get('https://raw.githubusercontent.com/democatscharts/charts/master/' + $scope.currency_name + '/blocks_time_avg_1d.json')
-         .then(function(res){
-            data = res.data;
-
-          $scope.chartBlocksTimeConfig.series.push({
-              id: 1,
-              data: data.map(toMicrotime, data),
-              tooltip: {
-                  valueSuffix: ' s'
-              }
-          });
-
-      });
-
-      $scope.chartBlocksTimeConfig = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector: {
-                  enabled: true
-              },
-              navigator: {
-                  enabled: true
-              }
-          },
-          title: {
-              text: 'Blocks time (average)'
-          },
-          series: [],
-          useHighStocks: true
-      }
+      // Blocks time (avg)
+      $scope.pushToChart($scope.currency_name, 'blocks_time_avg', $scope.period, 'chartBlocksTimeConfig', 'toMicrotime', 'Blocks time (average)', ' s', 0);
+      $scope.createChart('chartBlocksTimeConfig', 'Blocks time (average)');
     }
-        $scope.loadCharts();
+
+    $scope.loadCharts();
 }]);
 
 
