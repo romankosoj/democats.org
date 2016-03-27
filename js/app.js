@@ -644,7 +644,7 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
 
       // Transactions outputs
       $scope.pushToChart($scope.currency_name, 'transactions_outputs', $scope.period, 'chartTransactionsOutputsConfig', 'toMicrotimeCoins', 'Transactions outputs (sum)', '', 2);
-      $scope.createChart('chartTransactionsOutputsConfig', 'Transactions count');
+      $scope.createChart('chartTransactionsOutputsConfig', 'Transactions outputs (sum)');
 
       // Transactions size
       $scope.pushToChart($scope.currency_name, 'transactions_size_avg', $scope.period, 'chartTransactionsSizeConfig', 'toMicrotime', 'Transactions size (avg)', 'bytes', 0);
