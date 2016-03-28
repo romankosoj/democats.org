@@ -650,7 +650,10 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
     $scope.$watch('currencies', function() {
         $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
         divider = Math.log10($scope.selected_pool_stats.coin_units);
-        $scope.loadCharts();
+        if (!$scope.chartsLoaded) {
+          $scope.loadCharts();
+          $scope.chartsLoaded = true;
+        }
     });
 
     $scope.loadCharts = function() {
