@@ -509,6 +509,7 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
     $scope.currency_name = $filter('lowercase')(urlParam('name'));
     if (!$scope.period)
       $scope.period = '1d';
+    $scope.disabled = false;
 
     var simpleChartConfig = {
         options: {
@@ -574,8 +575,35 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
               chart: {
                   zoomType: 'x'
               },
-              rangeSelector: {
-                  enabled: true
+              rangeSelector : {
+                  buttons: [{
+                      type: 'day',
+                      count: 1,
+                      text: '1d'
+                  },{
+                      type: 'week',
+                      count: 1,
+                      text: '1w'
+                  },{
+                      type: 'month',
+                      count: 1,
+                      text: '1m'
+                  }, {
+                      type: 'month',
+                      count: 6,
+                      text: '6m'
+                  }, {
+                      type: 'ytd',
+                      text: 'YTD'
+                  }, {
+                      type: 'year',
+                      count: 1,
+                      text: '1y'
+                  }, {
+                      type: 'all',
+                      text: 'All'
+                  }],
+                  selected: 2
               },
               navigator: {
                   enabled: true
@@ -585,13 +613,13 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
               text: t
           },
           series: [],
+          loading: true,
           useHighStocks: true
       }
     };
     $scope.pushToChart = function(c, ch, p, cf, f, n, vs, vd) {
       var domain = 'https://raw.githubusercontent.com/democatscharts/charts/master/';
-      console.log(domain + c + '/' + ch + '_' + p + '.json');
-      $http.get(domain + c + '/' + ch + '_' + p + '.json')
+      $http.get(domain + $filter('lowercase')(c) + '/' + ch + '_' + p + '.json')
          .then(function(res){
             data = res.data;
 
@@ -603,8 +631,15 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
                   valueSuffix: vs
               }
           });
-          return $scope.chartBlocksTimeConfig;
+
+          $scope[cf].loading = false;
+          $scope.isDisabled = false;
       });
+    };
+    $scope.clearChart = function(cf) {
+      $scope.isDisabled = true;
+      $scope[cf].series = [];
+      $scope[cf].loading = true;
     };
 
     $scope.$watch('pools', function() {
@@ -619,55 +654,55 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
 
     $scope.loadCharts = function() {
       // Difficulty
-      $scope.pushToChart($scope.currency_name, 'difficulty_avg', $scope.period, 'chartDifficultyConfig', 'toMicrotime', 'Difficulty', '', 0);
+      $scope.pushToChart($scope.currency_name, 'difficulty_avg', $scope.period, 'chartDifficultyConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Difficulty', '', 0);
       $scope.createChart('chartDifficultyConfig', 'Difficulty');
 
       // Hashrate
-      $scope.pushToChart($scope.currency_name, 'hashrate', $scope.period, 'chartHashrateConfig', 'toMicrotime', 'Hashrate', ' H/s', 2);
+      $scope.pushToChart($scope.currency_name, 'hashrate', $scope.period, 'chartHashrateConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Hashrate', ' H/s', 2);
       $scope.createChart('chartHashrateConfig', 'Hashrate');
 
       // Generated coins
-      $scope.pushToChart($scope.currency_name, 'generated_coins', $scope.period, 'chartGeneratedCoinsConfig', 'toMicrotimeCoins', 'Generated coins', '', 0);
+      $scope.pushToChart($scope.currency_name, 'generated_coins', $scope.period, 'chartGeneratedCoinsConfig', 'toMicrotimeCoins', $filter('capitalize')($scope.currency_name) + ' Generated coins', '', 0);
       $scope.createChart('chartGeneratedCoinsConfig', 'Generated coins');
 
       // Block reward
-      $scope.pushToChart($scope.currency_name, 'block_reward', $scope.period, 'chartBlockRewardConfig', 'toMicrotimeCoins', 'Block reward', '', 2);
+      $scope.pushToChart($scope.currency_name, 'block_reward', $scope.period, 'chartBlockRewardConfig', 'toMicrotimeCoins', $filter('capitalize')($scope.currency_name) + ' Block reward', '', 2);
       $scope.createChart('chartBlockRewardConfig', 'Block reward');
 
       // Transactions count
-      $scope.pushToChart($scope.currency_name, 'transactions_count', $scope.period, 'chartTransactionsCountConfig', 'toMicrotime', 'Transactions count', '', 0);
+      $scope.pushToChart($scope.currency_name, 'transactions_count', $scope.period, 'chartTransactionsCountConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Transactions count', '', 0);
       $scope.createChart('chartTransactionsCountConfig', 'Transactions count');
 
       // Transactions fees
-      $scope.pushToChart($scope.currency_name, 'transactions_fees', $scope.period, 'chartTransactionsFeesConfig', 'toMicrotimeCoins', 'Transactions fees', '', 2);
+      $scope.pushToChart($scope.currency_name, 'transactions_fees', $scope.period, 'chartTransactionsFeesConfig', 'toMicrotimeCoins', $filter('capitalize')($scope.currency_name) + ' Transactions fees', '', 2);
       $scope.createChart('chartTransactionsFeesConfig', 'Transactions fees');
 
       // Transactions outputs
-      $scope.pushToChart($scope.currency_name, 'transactions_outputs', $scope.period, 'chartTransactionsOutputsConfig', 'toMicrotimeCoins', 'Transactions outputs (sum)', '', 2);
+      $scope.pushToChart($scope.currency_name, 'transactions_outputs', $scope.period, 'chartTransactionsOutputsConfig', 'toMicrotimeCoins', $filter('capitalize')($scope.currency_name) + ' Transactions outputs (sum)', '', 2);
       $scope.createChart('chartTransactionsOutputsConfig', 'Transactions outputs (sum)');
 
       // Transactions size
-      $scope.pushToChart($scope.currency_name, 'transactions_size_avg', $scope.period, 'chartTransactionsSizeConfig', 'toMicrotime', 'Transactions size (avg)', 'bytes', 0);
+      $scope.pushToChart($scope.currency_name, 'transactions_size_avg', $scope.period, 'chartTransactionsSizeConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Transactions size (avg)', 'bytes', 0);
       $scope.createChart('chartTransactionsSizeConfig', 'Transactions size (average)');
 
       // Transactions fusion count
-      $scope.pushToChart($scope.currency_name, 'transactions_fusion_count', $scope.period, 'chartTransactionsFusionCountConfig', 'toMicrotime', 'Fusion transactions count', '', 0);
+      $scope.pushToChart($scope.currency_name, 'transactions_fusion_count', $scope.period, 'chartTransactionsFusionCountConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Fusion transactions count', '', 0);
       $scope.createChart('chartTransactionsFusionCountConfig', 'Fusion transactions count');
 
       // Current tx median
-      $scope.pushToChart($scope.currency_name, 'block_current_txs_median_max', $scope.period, 'chartBlocksCurrentTxMedianConfig', 'toMicrotime', 'Current tx median', ' bytes', 0);
+      $scope.pushToChart($scope.currency_name, 'block_current_txs_median_max', $scope.period, 'chartBlocksCurrentTxMedianConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Current tx median', ' bytes', 0);
       $scope.createChart('chartBlocksCurrentTxMedianConfig', 'Blocks current tx median (max)');
 
       // Blocks penalty percentage (avg)
-      $scope.pushToChart($scope.currency_name, 'blocks_penalty_percentage', $scope.period, 'chartBlocksPenaltyPercentageConfig', 'toMicrotime', 'Percentage of blocks with penalty', '%', 0);
+      $scope.pushToChart($scope.currency_name, 'blocks_penalty_percentage', $scope.period, 'chartBlocksPenaltyPercentageConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Percentage of blocks with penalty', '%', 0);
       $scope.createChart('chartBlocksPenaltyPercentageConfig', 'Percentage of blocks with penalty');
 
       // Blocks size (avg)
-      $scope.pushToChart($scope.currency_name, 'blocks_size_avg', $scope.period, 'chartBlocksSizeConfig', 'toMicrotime', 'Blocks size (average)', ' bytes', 0);
+      $scope.pushToChart($scope.currency_name, 'blocks_size_avg', $scope.period, 'chartBlocksSizeConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Blocks size (average)', ' bytes', 0);
       $scope.createChart('chartBlocksSizeConfig', 'Blocks size (average)');
 
       // Blocks time (avg)
-      $scope.pushToChart($scope.currency_name, 'blocks_time_avg', $scope.period, 'chartBlocksTimeConfig', 'toMicrotime', 'Blocks time (average)', ' s', 0);
+      $scope.pushToChart($scope.currency_name, 'blocks_time_avg', $scope.period, 'chartBlocksTimeConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Blocks time (average)', ' s', 0);
       $scope.createChart('chartBlocksTimeConfig', 'Blocks time (average)');
     }
 
@@ -889,6 +924,5 @@ function toMicrotime(data) {
 }
 
 function toMicrotimeCoins(data) {
-  console.log(divider);
     return [1000 * data[0], data[1] / Math.pow(10, divider)];
 }
