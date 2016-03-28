@@ -509,7 +509,7 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
     $scope.currency_name = $filter('lowercase')(urlParam('name'));
     if (!$scope.period)
       $scope.period = '1d';
-    $scope.disabled = false;
+    $scope.chartsLoaded = false;
 
     var simpleChartConfig = {
         options: {
@@ -650,6 +650,7 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
     $scope.$watch('currencies', function() {
         $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
         divider = Math.log10($scope.selected_pool_stats.coin_units);
+        $scope.loadCharts();
     });
 
     $scope.loadCharts = function() {
@@ -705,8 +706,6 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
       $scope.pushToChart($scope.currency_name, 'blocks_time_avg', $scope.period, 'chartBlocksTimeConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Blocks time (average)', ' s', 0);
       $scope.createChart('chartBlocksTimeConfig', 'Blocks time (average)');
     }
-
-    $scope.loadCharts();
 }]);
 
 
