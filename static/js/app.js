@@ -553,7 +553,10 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
                 enabled: true
             },
             navigator: {
-                enabled: true
+                enabled: true,
+                series: {
+                    id: 'navigator'
+                }
             },
             scrollbar: {
                 enabled: true
@@ -631,7 +634,6 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
                   valueSuffix: vs
               }
           });
-
           $scope[cf].loading = false;
           $scope.isDisabled = false;
       });
@@ -640,6 +642,15 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
       $scope.isDisabled = true;
       $scope[cf].series = [];
       $scope[cf].loading = true;
+    };
+    $scope.redrawChart = function(cf) {
+        $scope[cf].getHighcharts().xAxis[0].setExtremes(new Date(Date.now() + -30*24*3600*1000));
+    };
+
+    $scope.reloadChart = function(c, ch, p, cf, f, n, vs, vd) {
+        $scope.clearChart(cf);
+        $scope.pushToChart(c, ch, p, cf, f, n, vs, vd);
+        $scope.redrawChart(cf);
     };
 
     $scope.$watch('pools', function() {
