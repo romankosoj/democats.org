@@ -199,6 +199,10 @@ layout: default
         </div>
 
 
+        <div class="row">
+            <highchart id="chart1" config="chartBlockVersionsConfig" class="span6"></highchart>
+        </div>
+
       </div>
    </div>
 </div>
