@@ -34,6 +34,16 @@ layout: default
             </tr>
             <tr>
                <td>
+                  <span>Version</span>
+                  <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
+                     <div class="hint__content" style="width:400px;white-space:normal;">"major version"."minor version"</div>
+                     <span>?</span>
+                  </a>
+               </td>
+               <td>{{block.major_version}}.{{block.minor_version}}</td>
+            </tr>
+            <tr>
+               <td>
                   <span>Difficulty</span>
                   <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
                      <div class="hint__content" style="width:400px;white-space:normal;">Simply, it means how difficult it is to find a solution for the block.<br>More specifically, it`s mathematical expectation for number of hashes someone needs to calculate in order to find a correct nonce value solving the block.<br>Last block difficulty is often considered as current network difficulty.</div>
