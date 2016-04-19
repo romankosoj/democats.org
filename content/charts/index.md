@@ -14,6 +14,14 @@ layout: default
             <div>
 
                <h1><span><span><br />{{currency_name | capitalize}}</span><span> </span><span> charts</span></span></h1>
+
+
+
+        <div class="row">
+            <highchart id="chart1" config="chartBlockVersionsConfig" class="span6"></highchart>
+        </div>
+
+               
         <div class="row">
             <highchart id="chart1" config="chartDifficultyConfig" class="span6"></highchart>
 
@@ -196,11 +204,6 @@ layout: default
                  </ul>
               </div>
             </div>
-        </div>
-
-
-        <div class="row">
-            <highchart id="chart1" config="chartBlockVersionsConfig" class="span6"></highchart>
         </div>
 
       </div>

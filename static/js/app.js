@@ -610,7 +610,7 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
               },
               navigator: {
                   enabled: true
-              }
+              },
           },
           title: {
               text: t
@@ -721,12 +721,9 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
       $scope.createChart('chartBlocksTimeConfig', 'Blocks time (average)');
 
       // Block version
-      $scope.pushToChart($scope.currency_name, 'version_1_0', $scope.period, 'chartBlockVersionsConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' blocks with version 1.0', '%', 0);
-      $scope.pushToChart($scope.currency_name, 'version_1_1', $scope.period, 'chartBlockVersionsConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' blocks with version 1.1', '%', 0);
-      $scope.pushToChart($scope.currency_name, 'version_2_0', $scope.period, 'chartBlockVersionsConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' blocks with version 2.0', '%', 0);
-      $scope.pushToChart($scope.currency_name, 'version_2_1', $scope.period, 'chartBlockVersionsConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' blocks with version 2.1', '%', 0);
-      $scope.pushToChart($scope.currency_name, 'version_3_0', $scope.period, 'chartBlockVersionsConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' blocks with version 3.0', '%', 0);
-      $scope.createChart('chartBlockVersionsConfig', 'Block version');
+      $scope.pushToChart($scope.currency_name, 'version_2_1', '1h', 'chartBlockVersionsConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' blocks with version 2.1', '%', 0);
+      $scope.pushToChart($scope.currency_name, 'version_3_0', '1h', 'chartBlockVersionsConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' blocks with version 3.0', '%', 0);
+      $scope.createChart('chartBlockVersionsConfig', 'Version upgrade progress');
     }
 }]);
 
