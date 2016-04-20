@@ -620,6 +620,49 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
           useHighStocks: true
       }
     };
+
+   $scope.createColumnChart = function(cf, t) {
+      $scope[cf] = {
+          options: {
+              chart: {
+                  type: 'column'
+              },
+              navigator: {
+                  enabled: false
+              },
+          },
+          title: {
+              text: t
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f}%</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+          },
+          plotOptions: {
+              column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+              }
+          },
+          xAxis: { 
+            type: 'datetime',
+            crosshair: true
+          },
+          yAxis: {
+            min: 0,
+            title: {
+                text: 'Percentage (%)'
+            }
+          },
+          series: [],
+          loading: true
+      }
+    };
+
     $scope.pushToChart = function(c, ch, p, cf, f, n, vs, vd) {
       var domain = 'https://raw.githubusercontent.com/democatscharts/charts/master/';
       $http.get(domain + $filter('lowercase')(c) + '/' + ch + '_' + p + '.json')
@@ -721,9 +764,9 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
       $scope.createChart('chartBlocksTimeConfig', 'Blocks time (average)');
 
       // Block version
-      $scope.pushToChart($scope.currency_name, 'version_2_1', '1h', 'chartBlockVersionsConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' blocks with version 2.1', '%', 0);
-      $scope.pushToChart($scope.currency_name, 'version_3_0', '1h', 'chartBlockVersionsConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' blocks with version 3.0', '%', 0);
-      $scope.createChart('chartBlockVersionsConfig', 'Version upgrade progress');
+      $scope.pushToChart($scope.currency_name, 'version_2_1', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 2.1', '%', 0);
+      $scope.pushToChart($scope.currency_name, 'version_3_0', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 3.0', '%', 0);
+      $scope.createColumnChart('chartBlockVersionsConfig', 'Block version upgrade progress');
     }
 }]);
 
