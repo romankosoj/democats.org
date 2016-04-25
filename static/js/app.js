@@ -764,8 +764,13 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
       $scope.createChart('chartBlocksTimeConfig', 'Blocks time (average)');
 
       // Block version
-      $scope.pushToChart($scope.currency_name, 'version_2_1', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 2.1', '%', 0);
-      $scope.pushToChart($scope.currency_name, 'version_3_0', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 3.0', '%', 0);
+      if ($scope.currency_name === "Quazarcoin") {
+          $scope.pushToChart($scope.currency_name, 'version_1_1', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 1.1', '%', 0);
+          $scope.pushToChart($scope.currency_name, 'version_2_0', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 2.0', '%', 0);
+      } else {
+          $scope.pushToChart($scope.currency_name, 'version_2_1', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 2.1', '%', 0);
+          $scope.pushToChart($scope.currency_name, 'version_3_0', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 3.0', '%', 0);
+      }
       $scope.createColumnChart('chartBlockVersionsConfig', 'Block version upgrade progress');
     }
 }]);
