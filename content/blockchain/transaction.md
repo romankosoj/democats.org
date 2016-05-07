@@ -5,10 +5,14 @@ keywords:
 layout: default
 ---
 
-<div class="container" ng-controller="TransactionDetailsCtl">
+<div ng-controller="TransactionDetailsCtl">
+
+<%= render 'pool-header' %>
+
+<div class="container">
    <noscript></noscript>
+
    <div class="main-app-container" ng-if="transaction">
-         <%= render 'blockchain-links' %>
 
          <section class="blockchain">
             <div>
@@ -158,5 +162,6 @@ layout: default
    </div>
 </div>
 
+</div>
 <script src="/js/scripts.js"></script>
 <script src="/js/app.js"></script>

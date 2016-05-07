@@ -11,6 +11,13 @@
     h1 a:hover {
         text-decoration: none
     }
+    h1.logo {
+        margin-top: 10px;
+        font-size: 42px;
+        font-weight: bold;
+        line-height: 57px;
+        text-align: center
+    }
     h5 {
         font-size: 28px;
         font-weight: 700
@@ -248,7 +255,6 @@
 
 .main-app-container {
     z-index: 1;
-    min-width: 1170px;
     min-height: 100%;
     box-sizing: border-box;
     padding-bottom: 15pt;
@@ -256,7 +262,6 @@
 }
 
 .container {
-    min-width: 1170px;
 }
 
 header.old-header {
@@ -462,9 +467,6 @@ header.old-header .nav .links .iconed-part .iconed:first-of-type {
     height: 17px;
 }
 
-.stats-and-search-block {
-    margin-top: 70px
-}
 .cc-stats {
     margin: 0 45px 0 0
 }
@@ -1452,7 +1454,6 @@ section.blockchain h1 {
 
 
 .transactions-panel {
-    width: 1170px;
     padding: 15px;
     text-align: center;
     background-color: hsla(0, 0%, 97%, .7)
@@ -1618,4 +1619,57 @@ section.blockchain h1 {
     padding: 8px;
     text-align: center;
     content: attr(show-when-alone)
+}
+
+.my-mining td:nth-child(2),
+.my-mining th:nth-child(2) {
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+.my-mining table.table th {
+    font-size: 13px;
+    font-weight: 100;
+    border-width: 0
+}
+.my-mining table.table td {
+    padding: 2px 8px;
+    font-size: 13px;
+    border-width: 0
+}
+.my-mining table.table tbody tr.position {
+    margin-top: 10px;
+    border-top: 1px dashed #dfdfdf
+}
+.my-mining table.table tbody tr.position td {
+    padding-top: 6px
+}
+.my-mining table.table tbody tr.green td {
+    color: #77c340
+}
+
+.grey {
+    background-color: hsla(0, 0%, 87%, .3);
+    min-height: 100%;
+}
+
+.font-grey {
+    color: hsla(0, 0%, 13%, .3);
+}
+.stats {
+    font-size:110%;
+}
+.small {
+    font-size:70%;
+}
+
+.small-85 {
+    font-size:85%;
+}
+
+.marketFooter {
+    font-size: 13px;
+    font-weight: 100;
+    border-width: 0
 }

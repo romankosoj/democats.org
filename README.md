@@ -138,3 +138,7 @@ One thing: remember to add trailing slashes to all nanoc links!
 ```sh
 $ bundle exec rake publish
 ```
+
+## Credits
+
+Icons made by [Freepik](http://www.freepik.com) from [www.flaticon.com](http://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/) - http://www.freepik.com/free-icon/pets-circular-sign_733787.htm

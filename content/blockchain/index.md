@@ -5,10 +5,14 @@ keywords:
 layout: default
 ---
 
-<div class="container" ng-controller="BlocksListCtl">
+<div ng-controller="BlocksListCtl">
+   <%= render 'pool-header' %>
+
+<div class="container">
    <noscript></noscript>
+
+   
    <div class="main-app-container">
-         <%= render 'blockchain-links' %>
 
          <section class="blockchain">
             <div>
@@ -48,6 +52,8 @@ layout: default
             </div>
          </section>
    </div>
+</div>
+
 </div>
 
 <script src="/js/scripts.js"></script>
