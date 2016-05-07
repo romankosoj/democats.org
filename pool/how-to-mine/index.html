@@ -1,6 +1,6 @@
 <html ng-app="pools">
 <head>
-  <title ng-bind="window_title || 'Cryptonote blockchain explorer | Democats.org'">Cryptonote blockchain explorer | Democats.org</title>
+  <title ng-bind="window_title || 'Cryptonote pool blocks | Democats.org'">Cryptonote pool blocks | Democats.org</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -36,8 +36,9 @@
 <div class="main-app-container">
 
   
-<div ng-controller="BlocksListCtl">
-   
+<div ng-controller="PoolMiningCtl">
+
+
 <header class="old-header ng-scope">
    <div class="navbar navbar-inverse">
       <div class="container">
@@ -65,63 +66,97 @@
 
 <div class="container">
    <noscript></noscript>
-
-   
    <div class="main-app-container">
 
-         <section class="blockchain">
-            <div>
-               <div class="stats-and-search-block">
-    <form class="form-inline search" autocomplete="off" novalidate="">
-        <div class="form-group cc-stats"><span class="cc-stats-header">Blockchain height</span>
-            <br /><span class="cc-stats-value">{{selected_pool_stats.height}}</span></div>
-        <div class="form-group cc-stats"><span class="cc-stats-header">Coins emitted</span>
-            <br /><span class="cc-stats-value">{{coins_emitted|quantityValue:1}} {{coins_emitted|quantityUnits}}</span></div>
-        <div class="form-group cc-stats"><span class="cc-stats-header">Difficulty</span>
-            <br /><span class="cc-stats-value">{{selected_pool_stats.difficulty|quantityValue}} {{selected_pool_stats.difficulty|quantityUnits}}</span></div>
-        <div class="form-group cc-stats"><span class="cc-stats-header">Network hashrate</span>
-            <br /><span class="cc-stats-value">{{selected_pool_stats.world_hashrate|hashrateValue}} {{selected_pool_stats.world_hashrate|hashrateUnits}}/s</span></div>
-        <div class="form-group search-block" ng-controller="SearchBlockchainCtl">
-            <input placeholder="block height / block hash / transaction hash" class="input-large form-control" ng-model="search" />
-            <button type="submit" class="btn btn-success" ng-click="searchFor(search)">Search</button>
-        </div>
-    </form>
-</div>
 
-               <h1>
-               <span><span>{{currency_name | capitalize}}</span><span> </span><span>blockchain</span></span></h1>
-               <div>
-                  <ul class="pager">
-                     <li class="previous" ng-if="prev_block_1 != prev_block_2"><a ng-click="changeHeight(prev_block_2)"><span class="arrow-left">&lt;</span> <span>{{prev_block_1}}</span><span> - </span><span>{{prev_block_2}}</span></a></li>
-                     <li class="next" ng-if="next_block_1 != next_block_2"><a ng-click="changeHeight(next_block_2)"><span>{{next_block_1}}</span><span> - </span><span>{{next_block_2}}</span> <span class="arrow-right">&gt;</span></a></li>
-                  </ul>
-                  <table class="table">
-                     <thead>
-                        <tr>
-                           <th>Height</th>
-                           <th>Timestamp (UTC)</th>
-                           <th class="text-center">Size</th>
-                           <th class="text-center">Transactions</th>
-                           <th>Hash</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        <tr ng-repeat="block in blocks">
-                           <td><a target="_self" href="/blockchain/block/?name={{currency_name}}&amp;hash={{block.hash}}">{{block.height}}</a></td>
-                           <td><span><span>{{ block.timestamp | amFromUnix | amUtc | amDateFormat:'YYYY-MM-DD HH:mm:ss' }}</span></span><span> (</span><span>{{block.timestamp | amFromUnix | amUtc | timeAgo}}</span><span>)</span></td>
-                           <td class="text-center">{{block.cumul_size}}</td>
-                           <td class="text-center">{{block.tx_count}}</td>
-                           <td><a target="_self" href="/blockchain/block/?name={{currency_name}}&amp;hash={{block.hash}}">{{block.hash}}</a></td>
-                        </tr>
-                     </tbody>
-                  </table>
-                  <ul class="pager">
-                     <li class="previous" ng-if="prev_block_1 != prev_block_2"><a ng-click="changeHeight(prev_block_2)"><span class="arrow-left">&lt;</span> <span>{{prev_block_1}}</span><span> - </span><span>{{prev_block_2}}</span></a></li>
-                     <li class="next" ng-if="next_block_1 != next_block_2"><a ng-click="changeHeight(next_block_2)"><span>{{next_block_1}}</span><span> - </span><span>{{next_block_2}}</span> <span class="arrow-right">&gt;</span></a></li>
-                  </ul>
-               </div>
-            </div>
-         </section>
+      <h5>Connection Details</h5>
+      <div class="stats row">
+          <div class="col-md-3">Mining Pool Address:</div>
+          <div class="col-md-9"><b>stratum+tcp://{{selected_pool.poolmining}}</b></div>
+      </div>
+      <div class="row">
+         <div class="col-md-12">
+<br />
+<p>
+Add <i>.[difficulty]</i> to the end of your address in mining software configuration to set fixed difficulty for your worker. You can calculate optimal difficulty as: WORKER HASHRATE x 90 SECONDS. So if average hashrate of your miner connection is 100 H/S, than optimal fixed difficulty will be 9000.
+</p>
+<p>
+<span class="muted">Example:</span> <code>minerd -a cryptonight -o stratum+tcp://{{selected_pool.poolmining}} -u WALLET_ADDRESS.9000 -p x</code>
+</p>
+         </div>
+      </div>
+      <hr />
+
+      <h5>Mining Apps</h5>
+      <div class="yourStats table-responsive">
+             <table class="table">
+                <thead>
+                   <tr>
+                      <th>Miner</th>
+                      <th>Discussion</th>
+                      <th>Download</th>
+                      <th>Source Code</th>
+                   </tr>
+                </thead>
+                <tbody>
+                   <tr>
+                      <td><b>CPUMiner-Multi</b><span>(</span><span>Windows, Linux, Unix</span><span>)</span></td>
+                      <td><a href="https://bitcointalk.org/index.php?topic=632724" target="_blank">BitcoinTalk</a></td>
+                      <td><a href="https://ottrbutt.com/cpuminer-multi/" target="_blank">ottrbutt.com</a></td>
+                      <td><a href="https://github.com/wolf9466/cpuminer-multi" target="_blank">Github</a></td>
+                   </tr>
+                   <tr>
+                      <td colspan="4"><span class="muted">Example:</span><code>minerd -a cryptonight -o stratum+tcp://{{selected_pool.poolmining}} -u WALLET_ADDRESS -p x</code></td>
+                   </tr>
+                </tbody>
+                <tbody>
+                   <tr>
+                      <td><b>ccminer-cryptonight</b><span>(</span><span>Windows, Linux</span><span>)</span></td>
+                      <td><a href="https://bitcointalk.org/index.php?topic=656841.msg7487737#msg7487737" target="_blank">BitcoinTalk</a></td>
+                      <td><a href="https://github.com/tsiv/ccminer-cryptonight/releases" target="_blank">Github</a></td>
+                      <td><a href="https://github.com/tsiv/ccminer-cryptonight" target="_blank">Github</a></td>
+                   </tr>
+                   <tr>
+                      <td colspan="4"><span class="muted">Example:</span><code>ccminer -a cryptonight -o stratum+tcp://{{selected_pool.poolmining}} -u WALLET_ADDRESS -p x</code></td>
+                   </tr>
+                </tbody>
+                <tbody>
+                   <tr>
+                      <td><b>Claymore CryptoNote GPU</b><span>(</span><span>Windows x64, Linux x64</span><span>)</span></td>
+                      <td><a href="https://bitcointalk.org/index.php?topic=638915.0" target="_blank">BitcoinTalk</a></td>
+                      <td><a href="https://mega.co.nz/#F!e4JVEAIJ!l1iF4z10fMyJzY5-LnyC2A" target="_blank">mega.co.nz</a></td>
+                      <td class="font-grey">Proprietary</td>
+                   </tr>
+                   <tr>
+                      <td colspan="4"><span class="muted">Example:</span><code>NsGpuCNMiner64 -o stratum+tcp://{{selected_pool.poolmining}} -u WALLET_ADDRESS -p x</code></td>
+                   </tr>
+                </tbody>
+                <tbody>
+                   <tr>
+                      <td><b>Claymore CryptoNote CPU</b><span>(</span><span>Windows</span><span>)</span></td>
+                      <td><a href="https://bitcointalk.org/index.php?topic=647251.0" target="_blank">BitcoinTalk</a></td>
+                      <td><a href="https://mega.co.nz/#F!Hg4g1bLT!4Upg8GNiEZYCaZ04XVh_yg" target="_blank">mega.co.nz</a></td>
+                      <td class="font-grey">Proprietary</td>
+                   </tr>
+                   <tr>
+                      <td colspan="4"><span class="muted">Example:</span><code>NsCpuCNMiner64 -o stratum+tcp://{{selected_pool.poolmining}} -u WALLET_ADDRESS -p x</code></td>
+                   </tr>
+                </tbody>
+                <tbody>
+                   <tr>
+                      <td><b>Yam</b><span>(</span><span>Windows x64, Linux x64, MacOS x64, FreeBSD x64</span><span>)</span></td>
+                      <td><a href="https://twitter.com/yvg1900" target="_blank">Twitter</a></td>
+                      <td><a href="https://mega.co.nz/#F!UlkU0RyR!E8n4CFkqVu0WoOnsJnQkSg" target="_blank">mega.co.nz</a></td>
+                      <td class="font-grey">Proprietary</td>
+                   </tr>
+                   <tr>
+                      <td colspan="4"><span class="muted">Example:</span><code>yam -c x -M stratum+tcp://WALLET_ADDRESS:x@{{selected_pool.poolmining}}</code></td>
+                   </tr>
+                </tbody>
+             </table>
+      </div>
+
+
    </div>
 </div>
 

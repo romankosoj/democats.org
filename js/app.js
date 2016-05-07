@@ -5,6 +5,64 @@ var http_config = {
 };
 var divider = 0;
 
+var simpleChartConfig = {
+    options: {
+        chart: {
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            height: 100,
+            width: 240,
+            zoomType: 'x'
+        },
+        rangeSelector: {
+            enabled: false
+        },
+        navigator: {
+            enabled: false
+        },
+        scrollbar: {
+            enabled: false
+        },
+        xAxis: {
+            visible: false
+        },
+        yAxis: {
+            lineWidth: 1,
+            opposite: false,
+            labels: {
+                align: 'right',
+                x: -5
+            }
+        }
+
+    },
+    series: [],
+    useHighStocks: true
+};
+var extendedChartConfig = {
+    options: {
+        chart: {
+            zoomType: 'x'
+        },
+        rangeSelector: {
+            enabled: true
+        },
+        navigator: {
+            enabled: true,
+            series: {
+                id: 'navigator'
+            }
+        },
+        scrollbar: {
+            enabled: true
+        }
+    },
+    series: [],
+    title: {
+        text: 'Chart'
+    },
+    useHighStocks: true
+}
+
 
 var app = angular.module("pools", ['angularMoment', 'highcharts-ng', 'LocalStorageModule']);
 
@@ -22,12 +80,12 @@ app.directive('innerVar', function() {
 
 
 app.factory('HeaderService', function($window, $location, $rootScope) {
-  return {
-    changeCurrency: function(o) {
-        $location.search("name", o.name);
-        $window.location.href = $location.absUrl();
-    }
-  };
+    return {
+        changeCurrency: function(o) {
+            $location.search("name", o.name);
+            $window.location.href = $location.absUrl();
+        }
+    };
 });
 
 app.factory('blockFactory', function($http) {
@@ -97,8 +155,9 @@ app.factory('poolsStatsFactory', function($rootScope) {
     };
 });
 
+app.controller("MainCtl", ["$scope", "$filter", "$http", "localStorageService", "poolsFactory", "poolsStatsFactory", function($scope, $filter, $http, localStorageService, poolsFactory, poolsStatsFactory) {
+    $scope.addresses = localStorageService.get("addresses") || [];
 
-app.controller("MainCtl", ["$scope", "$filter", "poolsFactory", "poolsStatsFactory", function($scope, $filter, poolsFactory, poolsStatsFactory) {
     $scope.changeExamplePool = function(o) {
         $scope.selected_pool = o;
     }
@@ -107,14 +166,261 @@ app.controller("MainCtl", ["$scope", "$filter", "poolsFactory", "poolsStatsFacto
         $scope.selected_pool = $filter('getByTicker')($scope.pools, "DSH");
     });
 
+
+    $scope.$watchCollection('[selected_pool, currencies]', function() {
+        angular.forEach($scope.addresses, function(address, index) {
+            var pool = $filter('getByName')($scope.pools, address.currency);
+
+            $http.get(pool.poolrpc + "stats_address?address=" + address.address, http_config).success(function(data, status) {
+                address.address_stats = data;
+            });
+        });
+    });
+
 }]);
+
+app.controller("PoolIndexCtl", ["$scope", '$sce', "$filter", "$http", "localStorageService", "HeaderService", "poolsFactory", "poolsStatsFactory", function($scope, $sce, $filter, $http, localStorageService, HeaderService, poolsFactory, poolsStatsFactory) {
+    $scope.currency_name = $filter('lowercase')(urlParam('name'));
+    $scope.cryptonator_data = [];
+    $scope.current_date = new Date();
+    $scope.calcUnits = 1
+    $scope.calcUnitName = 'KH';
+    $scope.chatURL = '';
+    $scope.populatedCharts = false;
+    $scope.addresses = localStorageService.get("addresses") || [];
+
+    $scope.changePool = function(o) {
+        $scope.selected_pool = o;
+    }
+
+    $scope.addAddress = function() {
+        if (!$scope.selected_pool.name || !$scope.newAddress)
+            return;
+
+        var pool = $filter('getByName')($scope.pools, $scope.selected_pool.name);
+        $http.get(pool.poolrpc + "stats_address?address=" + $scope.newAddress, http_config).success(function(data, status) {
+            if (!data.error) {
+                var addresses = $scope.addresses;
+                addresses.unshift({
+                    currency: $scope.selected_pool.name,
+                    address: $scope.newAddress
+                });
+                addresses = $filter('unique')(addresses, ['address', 'currency']);
+                localStorageService.set("addresses", addresses);
+                $scope.addresses = addresses;
+                $scope.addressStatus = 'success';
+
+                $scope.loadAddresses();
+            } else {
+                $scope.addressStatus = data.error;
+            }
+        });
+    }
+
+    $scope.removeAddress = function(index) {
+        var addresses = $scope.addresses;
+        if (index > -1) {
+            addresses.splice(index, 1);
+        }
+        localStorageService.set("addresses", addresses);
+        $scope.addresses = addresses;
+
+        $scope.loadAddresses();
+    }
+    $scope.loadAddresses = function() {
+        $scope.addresses_stats = [];
+        $scope.addresses_currency = [];
+
+        angular.forEach($scope.addresses, function(address, index) {
+            if (address.currency == $scope.selected_pool.name) {
+                $scope.addresses_currency.push(address);
+                var pool = $filter('getByName')($scope.pools, address.currency);
+                $http.get(pool.poolrpc + "stats_address?address=" + address.address, http_config).success(function(data, status) {
+                    $scope.createChart('configChartsHashrate', 'Hashrate');
+                    $scope.pushToChart(data.charts.hashrate, 'configChartsHashrate', 'toMicrotime', 'Hashrate', '', 0);
+                    $scope.createChart('configChartsPayments', 'Payments');
+                    $scope.pushToChart(data.charts.payments, 'configChartsPayments', 'toMicrotimeCoins', 'Payment', '', 0);
+                    data.configCharts = [];
+                    data.configCharts['hashrate'] = $scope.configChartsHashrate;
+                    data.configCharts['payments'] = $scope.configChartsPayments;
+                    data.real_index = index;
+                    data.paymentsList = [];
+                    data.last_printed_payment = 2000000000;
+                    $scope.addresses_stats.push(data);
+                });
+            }
+        });
+    }
+
+
+    $scope.parsePayment = function(time, serializedPayment) {
+        var parts = serializedPayment.split(':');
+        return {
+            time: parseInt(time),
+            hash: parts[0],
+            amount: parts[1],
+            fee: parts[2],
+            mixin: parts[3],
+            recipients: parts[4]
+        };
+    }
+
+    $scope.sortPayments = function(index) {
+        $scope.addresses_stats[index].paymentsList = $filter('unique')($scope.addresses_stats[index].paymentsList, 'time');
+        $scope.addresses_stats[index].paymentsList = $filter('orderBy')($scope.addresses_stats[index].paymentsList, 'time', -1);
+
+        $scope.addresses_stats[index].last_printed_payment = $scope.addresses_stats[index].paymentsList[$scope.addresses_stats[index].paymentsList.length - 1].time;
+    }
+
+    $scope.getPayments = function(timestamp, index) {
+        var url = $scope.selected_pool.poolrpc + "get_payments?address=" + $scope.addresses_currency[index].address + "&time=" + timestamp;
+        $http.get(url, http_config).success(function(data, status) {
+            var raw_payments = data;
+            for (var i = 0; i < raw_payments.length; i += 2) {
+                var payment = $scope.parsePayment(raw_payments[i + 1], raw_payments[i]);
+                $scope.addresses_stats[index].paymentsList.push(payment);
+            }
+            $scope.sortPayments(index);
+        });
+    }
+
+    $scope.getData = function() {
+        $http.get($scope.selected_pool.poolrpc + "stats").success(function(data, status) {
+            $scope.data = data;
+
+            if (!$scope.populatedCharts) {
+                $scope.createChart('chartDifficultyConfig', 'Difficulty');
+                $scope.pushToChart(data.charts.difficulty, 'chartDifficultyConfig', 'toMicrotime', 'Difficulty', '', 0);
+
+                $scope.createChart('chartHashrateConfig', "Pool_Hashrate");
+                $scope.pushToChart(data.charts.hashrate, 'chartHashrateConfig', 'toMicrotime', 'Hashrate', ' H/s', 2);
+
+                if (data.charts.profit !== undefined && data.charts.profit.length != 0) {
+                    $scope.createChart('chartHashUSDConfig', 'Hash/USD');
+                    $scope.pushToChart(data.charts.profit, 'chartHashUSDConfig', 'toMicrotime', 'Profit', 'H/USD', 0);
+                }
+
+                if (data.charts.price !== undefined && data.charts.price.length != 0) {
+                    $scope.createChart('chartPriceUSDConfig', 'Price in USD');
+                    $scope.pushToChart(data.charts.price, 'chartPriceUSDConfig', 'toMicrotime', 'USD', '', 0);
+                }
+                $scope.populatedCharts = true;
+            }
+        });
+    }
+
+    $scope.getCryptonatorData = function(ticker) {
+        $http.get("https://www.cryptonator.com/api/ticker/" + $scope.selected_pool.ticker.toUpperCase() + "-" + ticker.toUpperCase()).success(function(data, status) {
+            $scope.cryptonator_data[data.ticker.target] = data.ticker.price;
+            $scope.cryptonator_updated = data.timestamp;
+            if (ticker == 'USD') {
+                $scope.hashPerUSD = $scope.data.charts.profit[$scope.data.charts.profit.length-1][1];
+            }
+        });
+    }
+
+    $scope.calcEstimateProfit = function() {
+        var rateUnit = Math.pow(1024, parseInt($scope.calcUnits));
+        var hashRate = parseFloat($scope.calcHashRate * rateUnit);
+        $scope.calcProfit = (hashRate * 86400 / $scope.data.network.difficulty) * $scope.data.network.reward;
+    }
+
+    $scope.setCalcUnits = function(calcUnits, calcUnitName) {
+        $scope.calcUnits = calcUnits;
+        $scope.calcUnitName = calcUnitName;
+    }
+
+    $scope.createChart = function(cf, t, data) {
+        $scope[cf] = {
+            options: {
+                chart: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    height: 150,
+                    zoomType: 'x'
+                },
+                rangeSelector: {
+                    enabled: false
+                },
+                navigator: {
+                    enabled: false
+                },
+                scrollbar: {
+                    enabled: false
+                },
+                title: {
+                    text: t
+                },
+                xAxis: {
+                    visible: false
+                },
+                yAxis: {
+                    visible:false,
+                },
+            },
+            series: [],
+            useHighStocks: true
+        }
+    };
+    $scope.pushToChart = function(d, cf, f, n, vs, vd) {
+        $scope[cf].series.push({
+            name: n,
+            data: d.map(window[f], d),
+            tooltip: {
+                valueSuffix: vs
+            }
+        });
+        $scope[cf].loading = false;
+    };
+
+    $scope.$watch('pools', function() {
+        $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
+        $rootScope.window_title = $filter('capitalize')($scope.selected_pool.name) + " mining pool | Democats.org";
+    });
+    $scope.$watchCollection('[selected_pool, currencies]', function() {
+        if ($scope.chatURL == '') {
+            $scope.chatURL = $sce.trustAsResourceUrl('https://kiwiirc.com/client/irc.kiwiirc.com/?&theme=mini#' + $scope.selected_pool.name);
+        }
+        $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
+        divider = $scope.coin_unit_fraction = Math.log10($scope.selected_pool_stats.coin_units);
+
+        if ($scope.selected_pool !== undefined && $scope.currencies !== undefined && ($scope.height === undefined || $scope.height === null)) {
+            $scope.getData();
+        }
+        $scope.getCryptonatorData('BTC');
+        $scope.getCryptonatorData('USD');
+
+        if ($scope.addresses_currency === undefined) {
+            $scope.loadAddresses();
+        }
+    });
+}]);
+
+
+
+app.controller("PoolMiningCtl", ["$rootScope", "$scope", "$filter", "$http", "HeaderService", "poolsFactory", "poolsStatsFactory", function($rootScope, $scope, $filter, $http, HeaderService, poolsFactory, poolsStatsFactory) {
+    $scope.currency_name = $filter('lowercase')(urlParam('name'));
+
+    $scope.changeCurrency = function(o) {
+        HeaderService.changeCurrency(o);
+    }
+
+    $scope.$watch('pools', function() {
+        $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
+        $rootScope.window_title = "How to mine " + $filter('capitalize')($scope.selected_pool.name) + " | Democats.org";
+    });
+    $scope.$watch('currencies', function() {
+        $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
+    });
+}]);
+
+
 
 
 app.controller("BlocksListCtl", ["$rootScope", "$scope", "$filter", "$http", "HeaderService", "poolsFactory", "poolsStatsFactory", "blockFactory", function($rootScope, $scope, $filter, $http, HeaderService, poolsFactory, poolsStatsFactory, blockFactory) {
     $scope.currency_name = $filter('lowercase')(urlParam('name'));
 
     $scope.changeCurrency = function(o) {
-      HeaderService.changeCurrency(o);
+        HeaderService.changeCurrency(o);
     }
 
     $scope.getBlocks = function(height) {
@@ -174,7 +480,7 @@ app.controller("BlockDetailsCtl", ["$rootScope", "$scope", "$filter", "$http", "
     $scope.hash = urlParam('hash');
 
     $scope.changeCurrency = function(o) {
-      HeaderService.changeCurrency(o);
+        HeaderService.changeCurrency(o);
     }
 
     $scope.changeBlock = function(hash) {
@@ -245,7 +551,7 @@ app.controller("TransactionDetailsCtl", ["$rootScope", "$scope", "$filter", "$ht
     $scope.hash = urlParam('hash');
 
     $scope.changeCurrency = function(o) {
-      HeaderService.changeCurrency(o);
+        HeaderService.changeCurrency(o);
     }
 
     $scope.getTransaction = function(hash) {
@@ -288,7 +594,7 @@ app.controller("PoolBlocksCtl", ["$rootScope", "$scope", "$filter", "$http", "He
     $scope.blocks = [];
 
     $scope.changeCurrency = function(o) {
-      HeaderService.changeCurrency(o);
+        HeaderService.changeCurrency(o);
     }
 
     $scope.parseBlock = function(height, serializedBlock) {
@@ -376,7 +682,6 @@ app.controller("PoolBlocksCtl", ["$rootScope", "$scope", "$filter", "$http", "He
 }]);
 
 
-
 app.controller("SearchBlockchainCtl", ["$rootScope", "$scope", "$filter", "$http", "$window", "poolsFactory", "poolsStatsFactory", "blockFactory", function($rootScope, $scope, $filter, $http, $window, poolsFactory, poolsStatsFactory, blockFactory) {
     $scope.currency_name = $filter('lowercase')(urlParam('name'));
 
@@ -428,266 +733,132 @@ app.controller("SearchBlockchainCtl", ["$rootScope", "$scope", "$filter", "$http
 }]);
 
 
-app.controller("DashboardCtl", ["$scope", "$filter", "$http", "localStorageService", "poolsFactory", "poolsStatsFactory", function($scope, $filter, $http, localStorageService, poolsFactory, poolsStatsFactory) {
-    $scope.addresses = localStorageService.get("addresses") || [];
-    $scope.addresses_stats = [];
-
-    $scope.changePool = function(o) {
-        $scope.selected_pool = o;
-    }
-
-    $scope.addAddress = function() {
-        if (!$scope.selected_pool.name || !$scope.newAddress)
-            return;
-        var addresses = $scope.addresses;
-        addresses.unshift({ currency: $scope.selected_pool.name, address: $scope.newAddress });
-        addresses = $filter('unique')(addresses, ['address', 'currency']);
-
-        $scope.addresses = addresses;
-        localStorageService.set("addresses", $scope.addresses)
-
-        $scope.addresses_stats.unshift({});
-    }
-
-    $scope.removeAddress = function(index) {
-        var addresses = $scope.addresses;
-        if (index > -1) {
-            addresses.splice(index, 1);
-        }
-        $scope.addresses = addresses;
-        localStorageService.set("addresses", $scope.addresses)
-
-        if (index > -1) {
-            $scope.addresses_stats.splice(index, 1);
-        }
-    }
-
-    $scope.moveDownAddress = function(index) {
-        var addresses = $scope.addresses;
-        var tmp = addresses[index + 1];
-        addresses[index + 1] = addresses[index];
-        addresses[index] = tmp;
-        $scope.addresses = addresses;
-        localStorageService.set("addresses", $scope.addresses)
-
-        tmp = $scope.addresses_stats[index + 1];
-        $scope.addresses_stats[index + 1] = $scope.addresses_stats[index];
-        $scope.addresses_stats[index] = tmp;
-    }
-
-    $scope.moveUpAddress = function(index) {
-        var addresses = $scope.addresses;
-        var tmp = addresses[index - 1];
-        addresses[index - 1] = addresses[index];
-        addresses[index] = tmp;
-        $scope.addresses = addresses;
-        localStorageService.set("addresses", $scope.addresses)
-
-        tmp = $scope.addresses_stats[index - 1];
-        $scope.addresses_stats[index - 1] = $scope.addresses_stats[index];
-        $scope.addresses_stats[index] = tmp;
-
-    }
-
-    $scope.$watch('pools', function() {
-        $scope.selected_pool = $filter('getByTicker')($scope.pools, "DSH");
-    });
-
-    $scope.$watchCollection('[selected_pool, currencies]', function() {
-        angular.forEach($scope.addresses, function(address, index) {
-            var pool = $filter('getByName')($scope.pools, address.currency);
-
-            $http.get(pool.poolrpc + "stats_address?address=" + address.address, http_config).success(function(data, status) {
-                $scope.addresses_stats[index] = data;
-            });
-        });
-    });
-}]);
-
-
 app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderService", "poolsFactory", "poolsStatsFactory", function($scope, $filter, $http, HeaderService, poolsFactory, poolsStatsFactory) {
     $scope.currency_name = $filter('lowercase')(urlParam('name'));
     if (!$scope.period)
-      $scope.period = '1d';
+        $scope.period = '1d';
     $scope.chartsLoaded = false;
 
-    var simpleChartConfig = {
-        options: {
-            chart: {
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                height: 100,
-                width: 240,
-                zoomType: 'x'
-            },
-            rangeSelector: {
-                enabled: false
-            },
-            navigator: {
-                enabled: false
-            },
-            scrollbar: {
-                enabled: false
-            },
-            xAxis: {
-                visible: false
-            },
-            yAxis: {
-                lineWidth: 1,
-                opposite: false,
-                labels: {
-                    align: 'right',
-                    x: -5
-                }
-            }
-
-        },
-        series: [],
-        useHighStocks: true
-    };
-    var extendedChartConfig = {
-        options: {
-            chart: {
-                zoomType: 'x'
-            },
-            rangeSelector: {
-                enabled: true
-            },
-            navigator: {
-                enabled: true,
-                series: {
-                    id: 'navigator'
-                }
-            },
-            scrollbar: {
-                enabled: true
-            }
-        },
-        series: [],
-        title: {
-            text: 'Chart'
-        },
-        useHighStocks: true
-    }
 
     $scope.changeCurrency = function(o) {
-      HeaderService.changeCurrency(o);
+        HeaderService.changeCurrency(o);
     }
     $scope.createChart = function(cf, t) {
-      $scope[cf] = {
-          options: {
-              chart: {
-                  zoomType: 'x'
-              },
-              rangeSelector : {
-                  buttons: [{
-                      type: 'day',
-                      count: 1,
-                      text: '1d'
-                  },{
-                      type: 'week',
-                      count: 1,
-                      text: '1w'
-                  },{
-                      type: 'month',
-                      count: 1,
-                      text: '1m'
-                  }, {
-                      type: 'month',
-                      count: 6,
-                      text: '6m'
-                  }, {
-                      type: 'ytd',
-                      text: 'YTD'
-                  }, {
-                      type: 'year',
-                      count: 1,
-                      text: '1y'
-                  }, {
-                      type: 'all',
-                      text: 'All'
-                  }],
-                  selected: 2
-              },
-              navigator: {
-                  enabled: true
-              },
-          },
-          title: {
-              text: t
-          },
-          series: [],
-          loading: true,
-          useHighStocks: true
-      }
+        $scope[cf] = {
+            options: {
+                chart: {
+                    zoomType: 'x'
+                },
+                rangeSelector: {
+                    buttons: [{
+                        type: 'day',
+                        count: 1,
+                        text: '1d'
+                    }, {
+                        type: 'week',
+                        count: 1,
+                        text: '1w'
+                    }, {
+                        type: 'month',
+                        count: 1,
+                        text: '1m'
+                    }, {
+                        type: 'month',
+                        count: 6,
+                        text: '6m'
+                    }, {
+                        type: 'ytd',
+                        text: 'YTD'
+                    }, {
+                        type: 'year',
+                        count: 1,
+                        text: '1y'
+                    }, {
+                        type: 'all',
+                        text: 'All'
+                    }],
+                    selected: 2
+                },
+                navigator: {
+                    enabled: true
+                },
+            },
+            title: {
+                text: t
+            },
+            series: [],
+            loading: true,
+            useHighStocks: true
+        }
     };
 
-   $scope.createColumnChart = function(cf, t) {
-      $scope[cf] = {
-          options: {
-              chart: {
-                  type: 'column'
-              },
-              navigator: {
-                  enabled: false
-              },
-          },
-          title: {
-              text: t
-          },
-          tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f}%</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-          },
-          plotOptions: {
-              column: {
-                pointPadding: 0.2,
-                borderWidth: 0
-              }
-          },
-          xAxis: { 
-            type: 'datetime',
-            crosshair: true
-          },
-          yAxis: {
-            min: 0,
+    $scope.createColumnChart = function(cf, t) {
+        $scope[cf] = {
+            options: {
+                chart: {
+                    type: 'column'
+                },
+                navigator: {
+                    enabled: false
+                },
+            },
             title: {
-                text: 'Percentage (%)'
-            }
-          },
-          series: [],
-          loading: true
-      }
+                text: t
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f}%</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            xAxis: {
+                type: 'datetime',
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Percentage (%)'
+                }
+            },
+            series: [],
+            loading: true
+        }
     };
 
     $scope.pushToChart = function(c, ch, p, cf, f, n, vs, vd) {
-      var domain = 'https://raw.githubusercontent.com/democatscharts/charts/master/';
-      $http.get(domain + $filter('lowercase')(c) + '/' + ch + '_' + p + '.json')
-         .then(function(res){
-            data = res.data;
+        var domain = 'https://raw.githubusercontent.com/democatscharts/charts/master/';
+        $http.get(domain + $filter('lowercase')(c) + '/' + ch + '_' + p + '.json')
+            .then(function(res) {
+                data = res.data;
 
-          $scope[cf].series.push({
-              name : n,
-              data: data.map(window[f], data),
-              tooltip: {
-                  valueDecimals: vd,
-                  valueSuffix: vs
-              }
-          });
-          $scope[cf].loading = false;
-          $scope.isDisabled = false;
-      });
+                $scope[cf].series.push({
+                    name: n,
+                    data: data.map(window[f], data),
+                    tooltip: {
+                        valueDecimals: vd,
+                        valueSuffix: vs
+                    }
+                });
+                $scope[cf].loading = false;
+                $scope.isDisabled = false;
+            });
     };
     $scope.clearChart = function(cf) {
-      $scope.isDisabled = true;
-      $scope[cf].series = [];
-      $scope[cf].loading = true;
+        $scope.isDisabled = true;
+        $scope[cf].series = [];
+        $scope[cf].loading = true;
     };
     $scope.redrawChart = function(cf) {
-        $scope[cf].getHighcharts().xAxis[0].setExtremes(new Date(Date.now() + -30*24*3600*1000));
+        $scope[cf].getHighcharts().xAxis[0].setExtremes(new Date(Date.now() + -30 * 24 * 3600 * 1000));
     };
 
     $scope.reloadChart = function(c, ch, p, cf, f, n, vs, vd) {
@@ -705,127 +876,74 @@ app.controller("BlockchainChartsCtl", ["$scope", "$filter", "$http", "HeaderServ
         $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
         divider = Math.log10($scope.selected_pool_stats.coin_units);
         if (!$scope.chartsLoaded) {
-          $scope.loadCharts();
-          $scope.chartsLoaded = true;
+            $scope.loadCharts();
+            $scope.chartsLoaded = true;
         }
     });
 
     $scope.loadCharts = function() {
-      // Difficulty
-      $scope.pushToChart($scope.currency_name, 'difficulty_avg', $scope.period, 'chartDifficultyConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Difficulty', '', 0);
-      $scope.createChart('chartDifficultyConfig', 'Difficulty');
+        // Difficulty
+        $scope.pushToChart($scope.currency_name, 'difficulty_avg', $scope.period, 'chartDifficultyConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Difficulty', '', 0);
+        $scope.createChart('chartDifficultyConfig', 'Difficulty');
 
-      // Hashrate
-      $scope.pushToChart($scope.currency_name, 'hashrate', $scope.period, 'chartHashrateConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Hashrate', ' H/s', 2);
-      $scope.createChart('chartHashrateConfig', 'Hashrate');
+        // Hashrate
+        $scope.pushToChart($scope.currency_name, 'hashrate', $scope.period, 'chartHashrateConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Hashrate', ' H/s', 2);
+        $scope.createChart('chartHashrateConfig', 'Hashrate');
 
-      // Generated coins
-      $scope.pushToChart($scope.currency_name, 'generated_coins', $scope.period, 'chartGeneratedCoinsConfig', 'toMicrotimeCoins', $filter('capitalize')($scope.currency_name) + ' Generated coins', '', 0);
-      $scope.createChart('chartGeneratedCoinsConfig', 'Generated coins');
+        // Generated coins
+        $scope.pushToChart($scope.currency_name, 'generated_coins', $scope.period, 'chartGeneratedCoinsConfig', 'toMicrotimeCoins', $filter('capitalize')($scope.currency_name) + ' Generated coins', '', 0);
+        $scope.createChart('chartGeneratedCoinsConfig', 'Generated coins');
 
-      // Block reward
-      $scope.pushToChart($scope.currency_name, 'block_reward', $scope.period, 'chartBlockRewardConfig', 'toMicrotimeCoins', $filter('capitalize')($scope.currency_name) + ' Block reward', '', 2);
-      $scope.createChart('chartBlockRewardConfig', 'Block reward');
+        // Block reward
+        $scope.pushToChart($scope.currency_name, 'block_reward', $scope.period, 'chartBlockRewardConfig', 'toMicrotimeCoins', $filter('capitalize')($scope.currency_name) + ' Block reward', '', 2);
+        $scope.createChart('chartBlockRewardConfig', 'Block reward');
 
-      // Transactions count
-      $scope.pushToChart($scope.currency_name, 'transactions_count', $scope.period, 'chartTransactionsCountConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Transactions count', '', 0);
-      $scope.createChart('chartTransactionsCountConfig', 'Transactions count');
+        // Transactions count
+        $scope.pushToChart($scope.currency_name, 'transactions_count', $scope.period, 'chartTransactionsCountConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Transactions count', '', 0);
+        $scope.createChart('chartTransactionsCountConfig', 'Transactions count');
 
-      // Transactions fees
-      $scope.pushToChart($scope.currency_name, 'transactions_fees', $scope.period, 'chartTransactionsFeesConfig', 'toMicrotimeCoins', $filter('capitalize')($scope.currency_name) + ' Transactions fees', '', 2);
-      $scope.createChart('chartTransactionsFeesConfig', 'Transactions fees');
+        // Transactions fees
+        $scope.pushToChart($scope.currency_name, 'transactions_fees', $scope.period, 'chartTransactionsFeesConfig', 'toMicrotimeCoins', $filter('capitalize')($scope.currency_name) + ' Transactions fees', '', 2);
+        $scope.createChart('chartTransactionsFeesConfig', 'Transactions fees');
 
-      // Transactions outputs
-      $scope.pushToChart($scope.currency_name, 'transactions_outputs', $scope.period, 'chartTransactionsOutputsConfig', 'toMicrotimeCoins', $filter('capitalize')($scope.currency_name) + ' Transactions outputs (sum)', '', 2);
-      $scope.createChart('chartTransactionsOutputsConfig', 'Transactions outputs (sum)');
+        // Transactions outputs
+        $scope.pushToChart($scope.currency_name, 'transactions_outputs', $scope.period, 'chartTransactionsOutputsConfig', 'toMicrotimeCoins', $filter('capitalize')($scope.currency_name) + ' Transactions outputs (sum)', '', 2);
+        $scope.createChart('chartTransactionsOutputsConfig', 'Transactions outputs (sum)');
 
-      // Transactions size
-      $scope.pushToChart($scope.currency_name, 'transactions_size_avg', $scope.period, 'chartTransactionsSizeConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Transactions size (avg)', 'bytes', 0);
-      $scope.createChart('chartTransactionsSizeConfig', 'Transactions size (average)');
+        // Transactions size
+        $scope.pushToChart($scope.currency_name, 'transactions_size_avg', $scope.period, 'chartTransactionsSizeConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Transactions size (avg)', 'bytes', 0);
+        $scope.createChart('chartTransactionsSizeConfig', 'Transactions size (average)');
 
-      // Transactions fusion count
-      $scope.pushToChart($scope.currency_name, 'transactions_fusion_count', $scope.period, 'chartTransactionsFusionCountConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Fusion transactions count', '', 0);
-      $scope.createChart('chartTransactionsFusionCountConfig', 'Fusion transactions count');
+        // Transactions fusion count
+        $scope.pushToChart($scope.currency_name, 'transactions_fusion_count', $scope.period, 'chartTransactionsFusionCountConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Fusion transactions count', '', 0);
+        $scope.createChart('chartTransactionsFusionCountConfig', 'Fusion transactions count');
 
-      // Current tx median
-      $scope.pushToChart($scope.currency_name, 'block_current_txs_median_max', $scope.period, 'chartBlocksCurrentTxMedianConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Current tx median', ' bytes', 0);
-      $scope.createChart('chartBlocksCurrentTxMedianConfig', 'Blocks current tx median (max)');
+        // Current tx median
+        $scope.pushToChart($scope.currency_name, 'block_current_txs_median_max', $scope.period, 'chartBlocksCurrentTxMedianConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Current tx median', ' bytes', 0);
+        $scope.createChart('chartBlocksCurrentTxMedianConfig', 'Blocks current tx median (max)');
 
-      // Blocks penalty percentage (avg)
-      $scope.pushToChart($scope.currency_name, 'blocks_penalty_percentage', $scope.period, 'chartBlocksPenaltyPercentageConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Percentage of blocks with penalty', '%', 0);
-      $scope.createChart('chartBlocksPenaltyPercentageConfig', 'Percentage of blocks with penalty');
+        // Blocks penalty percentage (avg)
+        $scope.pushToChart($scope.currency_name, 'blocks_penalty_percentage', $scope.period, 'chartBlocksPenaltyPercentageConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Percentage of blocks with penalty', '%', 0);
+        $scope.createChart('chartBlocksPenaltyPercentageConfig', 'Percentage of blocks with penalty');
 
-      // Blocks size (avg)
-      $scope.pushToChart($scope.currency_name, 'blocks_size_avg', $scope.period, 'chartBlocksSizeConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Blocks size (average)', ' bytes', 0);
-      $scope.createChart('chartBlocksSizeConfig', 'Blocks size (average)');
+        // Blocks size (avg)
+        $scope.pushToChart($scope.currency_name, 'blocks_size_avg', $scope.period, 'chartBlocksSizeConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Blocks size (average)', ' bytes', 0);
+        $scope.createChart('chartBlocksSizeConfig', 'Blocks size (average)');
 
-      // Blocks time (avg)
-      $scope.pushToChart($scope.currency_name, 'blocks_time_avg', $scope.period, 'chartBlocksTimeConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Blocks time (average)', ' s', 0);
-      $scope.createChart('chartBlocksTimeConfig', 'Blocks time (average)');
+        // Blocks time (avg)
+        $scope.pushToChart($scope.currency_name, 'blocks_time_avg', $scope.period, 'chartBlocksTimeConfig', 'toMicrotime', $filter('capitalize')($scope.currency_name) + ' Blocks time (average)', ' s', 0);
+        $scope.createChart('chartBlocksTimeConfig', 'Blocks time (average)');
 
-      // Block version
-      if ($scope.currency_name === "Quazarcoin") {
-          $scope.pushToChart($scope.currency_name, 'version_1_1', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 1.1', '%', 0);
-          $scope.pushToChart($scope.currency_name, 'version_2_0', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 2.0', '%', 0);
-      } else {
-          $scope.pushToChart($scope.currency_name, 'version_2_1', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 2.1', '%', 0);
-          $scope.pushToChart($scope.currency_name, 'version_3_0', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 3.0', '%', 0);
-      }
-      $scope.createColumnChart('chartBlockVersionsConfig', 'Block version upgrade progress');
-    }
-}]);
-
-
-app.controller("DashboardPaymentsCtl", ["$scope", "$filter", "$http", "poolsFactory", "poolsStatsFactory", function($scope, $filter, $http, poolsFactory, poolsStatsFactory) {
-    $scope.currency_name = urlParam('currency');
-    $scope.address = urlParam('address');
-    $scope.payments = [];
-
-    $scope.parsePayment = function(time, serializedPayment) {
-        var parts = serializedPayment.split(':');
-        return {
-            time: parseInt(time),
-            hash: parts[0],
-            amount: parts[1],
-            fee: parts[2],
-            mixin: parts[3],
-            recipients: parts[4]
-        };
-    }
-
-    $scope.sortPayments = function() {
-        $scope.payments = $filter('unique')($scope.payments, 'time');
-        $scope.payments = $filter('orderBy')($scope.payments, 'time', -1);
-
-        $scope.last_printed_payment = $scope.payments[$scope.payments.length - 1].time;
-    }
-
-    $scope.getPayments = function(timestamp) {
-        var url = $scope.selected_pool.poolrpc + "get_payments?address=" + $scope.address + "&time=" + timestamp;
-        $http.get(url, http_config).success(function(data, status) {
-            var raw_payments = data;
-            for (var i = 0; i < raw_payments.length; i += 2) {
-                var payment = $scope.parsePayment(raw_payments[i + 1], raw_payments[i]);
-                $scope.payments.push(payment);
-            }
-            $scope.sortPayments();
-        });
-    }
-
-    $scope.$watch('pools', function() {
-        $scope.selected_pool = $filter('getByName')($scope.pools, $scope.currency_name);
-    });
-    $scope.$watchCollection('[selected_pool, currencies]', function() {
-        $scope.selected_pool_stats = $filter('getByCurrency')($scope.currencies, $scope.currency_name);
-        $scope.coin_unit_fraction = Math.log10($scope.selected_pool_stats.coin_units);
-        if ($scope.selected_pool !== undefined && $scope.currencies !== undefined) {
-            if ($scope.selected_pool_stats.height != $scope.height) {
-                $scope.height = $scope.selected_pool_stats.height;
-                $scope.getPayments(2000000000);
-            }
+        // Block version
+        if ($scope.currency_name === "Quazarcoin") {
+            $scope.pushToChart($scope.currency_name, 'version_1_1', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 1.1', '%', 0);
+            $scope.pushToChart($scope.currency_name, 'version_2_0', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 2.0', '%', 0);
+        } else {
+            $scope.pushToChart($scope.currency_name, 'version_2_1', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 2.1', '%', 0);
+            $scope.pushToChart($scope.currency_name, 'version_3_0', '1h', 'chartBlockVersionsConfig', 'toMicrotime', 'Version 3.0', '%', 0);
         }
-    });
-
+        $scope.createColumnChart('chartBlockVersionsConfig', 'Block version upgrade progress');
+    }
 }]);
 
 
@@ -981,7 +1099,7 @@ app.config(function(localStorageServiceProvider) {
 
 app.config(['$locationProvider', function($locationProvider) {
 
-    $locationProvider.html5Mode(true);        
+    $locationProvider.html5Mode(true);
 
 }]);
 

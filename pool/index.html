@@ -1,0 +1,304 @@
+<html ng-app="pools">
+<head>
+  <title ng-bind="window_title || 'Cryptonote pool | Democats.org'">Cryptonote pool | Democats.org</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+  <script src="http://code.highcharts.com/stock/highstock.src.js"></script>
+  <script src="/dist/highcharts-ng.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/1.0.0-beta.3/angular-moment.min.js"></script>
+  <script src="/dist/angular-local-storage.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
+  <script src="/config.js"></script>
+
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-883823-26', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+</head>
+
+
+<body>
+<div class="main-app-container">
+
+  <div ng-controller="PoolIndexCtl">
+   
+<header class="old-header ng-scope">
+   <div class="navbar navbar-inverse">
+      <div class="container">
+         <div class="row">
+            <div class="col-xs-2">
+               <div class="navbar-header">
+                  <div class="logo-wrapper"><a target="_self" href="/" title="{{currency_name}} pool"><img width="16" height="16" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTYuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjMycHgiIGhlaWdodD0iMzJweCIgdmlld0JveD0iMCAwIDI2Mi42NCAyNjIuNjQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDI2Mi42NCAyNjIuNjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNMjYyLjY0LDEzMS4zMjJDMjYyLjY0LDU4LjkwOCwyMDMuNzI4LDAsMTMxLjMyLDBDNTguOTEzLDAsMCw1OC45MDgsMCwxMzEuMzIyQzAsMjAzLjczMSw1OC45MTMsMjYyLjY0LDEzMS4zMiwyNjIuNjQgICAgQzIwMy43MjgsMjYyLjY0LDI2Mi42NCwyMDMuNzI4LDI2Mi42NCwxMzEuMzIyeiBNMTMxLjMyLDI0OC4zMDNjLTY0LjUwNCwwLTExNi45ODMtNTIuNDgxLTExNi45ODMtMTE2Ljk4ICAgIGMwLTY0LjUwNiw1Mi40NzktMTE2Ljk4NSwxMTYuOTgzLTExNi45ODVjNjQuNTAxLDAsMTE2Ljk4Miw1Mi40NzUsMTE2Ljk4MiwxMTYuOTg1ICAgIEMyNDguMzAzLDE5NS44MywxOTUuODIxLDI0OC4zMDMsMTMxLjMyLDI0OC4zMDN6IiBmaWxsPSIjRkZGRkZGIi8+CgkJPHBhdGggZD0iTTEzMS4zMiwyNC4zOTdjLTU4Ljk1NSwwLTEwNi45MTgsNDcuOTYzLTEwNi45MTgsMTA2LjkxNmMwLDU4Ljk1NSw0Ny45NjMsMTA2LjkyMywxMDYuOTE4LDEwNi45MjMgICAgYzU4Ljk1NywwLDEwNi45MTYtNDcuOTU5LDEwNi45MTYtMTA2LjkyM0MyMzguMjM2LDcyLjM2NSwxOTAuMjc3LDI0LjM5NywxMzEuMzIsMjQuMzk3eiBNMTMxLjMyLDIyMy44OTggICAgYy01MS4wNTEsMC05Mi41ODEtNDEuNTI4LTkyLjU4MS05Mi41ODZjMC01MS4wNDgsNDEuNTMtOTIuNTc4LDkyLjU4MS05Mi41NzhjNTEuMDUxLDAsOTIuNTc4LDQxLjUzLDkyLjU3OCw5Mi41NzggICAgQzIyMy44OTgsMTgyLjM3LDE4Mi4zNzEsMjIzLjg5OCwxMzEuMzIsMjIzLjg5OHoiIGZpbGw9IiNGRkZGRkYiLz4KCQk8cGF0aCBkPSJNMTUzLjI5LDEzOS41NmMtMS4yODMtNC40MzgtMi41NjYtOC45MzgtNC40NTctMTMuMTMzYy0zLjM1MS03LjQxNC0xMS40Mi0xMS4zMTMtMTkuMzU5LTkuNjA3ICAgIGMtNC4xMDQsMC44ODQtNy43ODUsMi45NDQtMTEuNDE2LDUuMDI0Yy00LjA5MSwyLjMzNi04LjEzLDQuNzg0LTEyLjMzMSw2LjkxYy04LjA0Myw0LjA3Ni0xNi4xOTcsNy45MjctMjQuMjczLDExLjkzMiAgICBjLTMuMTAxLDEuNTQtNS44OTIsMy41MjMtOC4wMzQsNi4zMThjLTQuMDE5LDUuMjQ2LTYuNjMyLDExLjA4NS03LjIyLDE3LjY5M2MtMC42MDIsNi43NzYsMS40MzgsMTIuNTA4LDcuMTczLDE2LjU4MiAgICBjMi44MSwxLjk5OCw1Ljk3NCwzLjIyMSw5LjMxNSwzLjkyNWM3LjcyNywxLjYzOSwxNS41MzcsMS43NjUsMjMuMzY4LDEuMDc4YzMuMDY5LTAuMjc1LDYuMDY1LTAuMTY4LDguOCwxLjQxOSAgICBjMS42ODMsMC45NzEsMy4zNjMsMS45NzksNC44ODksMy4xNzRjNC4wMzcsMy4xNjQsNy45NzYsNi40NjksMTEuOTg1LDkuNjc1YzMuODc2LDMuMTA0LDguMTgsNS4xNTIsMTMuMzIyLDUuMzI1ICAgIGMxLjY5OS0wLjMxNywzLjQ0OS0wLjQ3Nyw1LjA5Mi0wLjk3NmM2LjA2Mi0xLjg2MiwxMC40MTItNS45MTMsMTMuNDE4LTExLjMzNmM0Ljg1LTguNzA5LDUuNjAxLTE3LjU2MiwwLjU3OS0yNi41OTQgICAgQzE1OS4zMjksMTU4LjMxNiwxNTYuMDIxLDE0OS4wNDgsMTUzLjI5LDEzOS41NnoiIGZpbGw9IiNGRkZGRkYiLz4KCQk8cGF0aCBkPSJNMjA2LjkyOSwxMzIuNzAzYy0xLjE5NC00LjU5OS0zLjQxNi04LjU4LTcuNjYzLTExLjAxOWMtNS40NjEtMy4xMzQtMTAuOTIxLTIuNDA4LTE1Ljk3MSwwLjg4NCAgICBjLTguODU0LDUuNzczLTEyLjQ1MiwxNC40NTctMTMuMDk2LDI0Ljg3NGMwLjE4NywxLjU4NywwLjMwOCwzLjM2OSwwLjY0LDUuMTFjMC4yNjYsMS4zNzIsMC42NjcsMi43NDQsMS4yMDgsNC4wMzcgICAgYzIuMTY2LDUuMTYxLDUuNzAzLDguODIsMTEuNDM1LDkuNzkxYzQuNjQ0LDAuNzk0LDguNzU2LTAuNzI4LDEyLjQ3OS0zLjM5N0MyMDQuOTMyLDE1Ni41NzEsMjA5LjY5NiwxNDMuMzg3LDIwNi45MjksMTMyLjcwM3oiIGZpbGw9IiNGRkZGRkYiLz4KCQk8cGF0aCBkPSJNMTE4Ljk2NiwxMDIuMzU4YzUuNDA5LDIuNDk0LDEwLjUzNCwxLjM1OCwxNS4zMTUtMS43NjVjOS40NTEtNi4xNywxNC42NTktMTkuOTU2LDExLjczMy0zMC44NTggICAgYy0xLjI1MS00LjYzNS0zLjQ5MS04LjYzNC03LjgxMy0xMS4wNTRjLTUuMzA0LTIuOTY4LTEwLjYyNC0yLjMxMi0xNS41NDUsMC44MTJjLTkuMDE5LDUuNzI3LTEyLjY4MywxNC40NjMtMTMuMzk3LDI1LjQyNiAgICBjMC4zMDEsMS43OTIsMC41MDIsNC4yNDcsMS4xNDgsNi41ODFDMTExLjcyNiw5Ni4yNywxMTQuMzIsMTAwLjIxOCwxMTguOTY2LDEwMi4zNTh6IiBmaWxsPSIjRkZGRkZGIi8+CgkJPHBhdGggZD0iTTE4OC4wNTYsOTIuMzU0Yy0wLjIxNS0xLjM3NS0wLjQwMS0zLjY1NC0wLjk0My01Ljg1M2MtMC45OTgtNC4wOTEtMy4wNDMtNy42MDUtNi41MzMtMTAuMTE0ICAgIGMtNC44NzMtMy40OTQtMTEuMjktMy40MzUtMTcuMDQ1LDAuMjRjLTYuMjQ5LDMuOTg2LTkuOTQsOS44NTQtMTEuODU0LDE2Ljg3NGMtMS42OTgsNi4yMTItMS42MjQsMTIuMzc3LDEuMTc3LDE4LjMxMyAgICBjMi45NDksNi4yMzgsOC41NjgsOS40ODEsMTUuMDMyLDguNjg4YzQuMTgyLTAuNTE2LDcuNjk2LTIuNTA0LDEwLjY5Ny01LjM2N0MxODQuODA3LDEwOS4xOTMsMTg3LjY5MSwxMDEuNzc0LDE4OC4wNTYsOTIuMzU0eiIgZmlsbD0iI0ZGRkZGRiIvPgoJCTxwYXRoIGQ9Ik05MC45OTksMTI1LjA2M2M5Ljc4Mi02LjM0MywxNS4wMTItMjAuNzcxLDExLjUzNy0zMS44OTVDMTAxLDg4LjI1LDk4LjI5MSw4NC4yMzYsOTMuMzMsODIuMjcxICAgIGMtNS41MTktMi4xODQtMTAuNjUzLTAuODYzLTE1LjIzMSwyLjQ5NUM3MC4wNzIsOTAuNjYsNjYuNjYsOTguOTYsNjYuMDgxLDEwOS42MThjMC4zMTUsMS43MDYsMC41NjIsNC4zNjksMS4zMTQsNi44NzcgICAgQzcwLjY4MywxMjcuNDM5LDgxLjQwOCwxMzEuMjg0LDkwLjk5OSwxMjUuMDYzeiIgZmlsbD0iI0ZGRkZGRiIvPgoJPC9nPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" /></a> <a target="_self" href="/" title="Cryptonote pools">Democats</a></div>
+               </div>
+            </div>
+            <div class="col-xs-8">
+               <div class="nav navbar-nav">
+                  <div class="links pull-left"><span class="iconed-part">
+                  <a target="_self" class="" href="/pool/?name={{currency_name}}" title="{{currency_name}} pool">Home</a>
+                  <a target="_self" class="" href="/pool/how-to-mine/?name={{currency_name}}" title="how to mine {{currency_name}}">How to mine</a>
+                  <a target="_self" class="" href="/pool/blocks/?name={{currency_name}}" title="{{currency_name}} democats blocks">Pool blocks</a>
+                  <a target="_self" class="" href="/blockchain/?name={{currency_name}}" title="{{currency_name}} block explorer">Blockchain explorer</a>
+                  <a target="_self" class="" href="/charts/?name={{currency_name}}" title="{{currency_name}} charts">Charts</a>
+                  </span></div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</header>
+   <div class="container">
+      <noscript></noscript>
+      <h1><span><span>{{currency_name | capitalize}}</span><span> </span><span>pool</span></span></h1>
+      <div class="row">
+         <div class="col-lg-8">
+            <section class="blockchain">
+               <div class="row">
+                  <div class="col-md-6 stats">
+                     <h5>Network</h5>
+                     <table class="table">
+                        <tr>
+                           <td>Hash Rate:</td>
+                           <td><b>{{selected_pool_stats.world_hashrate|hashrateValue}} {{selected_pool_stats.world_hashrate|hashrateUnits}}/s</b></td>
+                        </tr>
+                        <tr>
+                           <td>Block Found:</td>
+                           <td><b>{{ data.network.timestamp | amFromUnix | amUtc | timeAgo }}</b></td>
+                        </tr>
+                        <tr>
+                           <td>Difficulty:</td>
+                           <td><b>{{data.network.difficulty}}</b></td>
+                        </tr>
+                        <tr>
+                           <td>Blockchain Height:</td>
+                           <td><b>{{ data.network.height }}</b></td>
+                        </tr>
+                        <tr>
+                           <td>Last Reward:</td>
+                           <td><b>{{data.network.reward | asCoinUnits:selected_pool_stats.coin_units | number: 4}} {{selected_pool.ticker}}</b></td>
+                        </tr>
+                        <tr>
+                           <td>Last Hash:</td>
+                           <td><a target="_self" href="/blockchain/block/?name={{currency_name}}&amp;hash={{ data.network.hash }}">{{ data.network.hash | limitTo: 10 }}...</a></td>
+                        </tr>
+                     </table>
+                  </div>
+                  <div class="col-md-6 stats">
+                     <h5>Our Pool</h5>
+                     <table class="table">
+                        <tr>
+                           <td>Hash Rate:</td>
+                           <td><b>{{selected_pool_stats.pool_hashrate|hashrateValue}} {{selected_pool_stats.pool_hashrate|hashrateUnits}}/s</b></td>
+                        </tr>
+                        <tr>
+                           <td>Block Found:</td>
+                           <td><b>{{ data.pool.lastBlockFound/1000 | amFromUnix | amUtc | timeAgo }}</b></td>
+                        </tr>
+                        <tr>
+                           <td>Connected Miners:</td>
+                           <td><b>{{selected_pool_stats.workers}}</b></td>
+                        </tr>
+                        <tr>
+                           <td>Total Pool Fee:</td>
+                           <td><b>{{selected_pool_stats.fee}}%</b></td>
+                        </tr>
+                        <tr>
+                           <td>Block Found Every:</td>
+                           <td><b>{{(current_date/1000 - (data.network.difficulty / data.pool.hashrate) | amFromUnix | amUtc | timeAgo).slice(0,-4)}} (est.)</b></td>
+                        </tr>
+                     </table>
+                  </div>
+               </div>
+               <hr />
+               <div class="row chartsPoolStat">
+                  <div class="col-sm-3 chartWrap">
+                      <highchart id="chart1" config="chartDifficultyConfig" class="span6"></highchart>
+                  </div>
+                  <div class="col-sm-3 chartWrap">
+                      <highchart id="chart1" config="chartHashrateConfig" class="span6"></highchart>
+                  </div>
+                  <div class="col-sm-3 chartWrap" ng-if="chartPriceUSDConfig">
+                      <highchart id="chart1" config="chartPriceUSDConfig" class="span6"></highchart>
+                  </div>
+                  <div class="col-sm-3 chartWrap" ng-if="chartHashUSDConfig">
+                      <highchart id="chart1" config="chartHashUSDConfig" class="span6"></highchart>
+                  </div>
+               </div>
+               <!-- <hr> -->
+               <hr />
+               <h5>Your Stats &amp; Payment History</h5>
+                <div class="stats">
+                  <div class="input-group">
+                     <input class="form-control" id="yourStatsInput" type="text" ng-model="newAddress" placeholder="Enter Your Address" />
+                     <span class="input-group-btn"><button class="btn btn-default" type="button" id="lookUp" ng-click="addAddress()">
+                     <span><i class="fa fa-search"></i> Lookup</span>
+                     </button></span>
+                  </div>
+                  <div id="addressStatus">{{addressStatus}}</div>
+               </div>
+               <div class="stats" ng-repeat="address in addresses_currency" inner-var="address_index = $index">
+               <hr />
+                  <div class="row">
+                     <div class="col-md-12 stats">
+
+                         <div class="row">
+                            <div class="col-sm-11"><b>{{address.address | limitTo: 40}}...</b></div>
+                            <div class="col-sm-1"><a href="" ng-click="removeAddress(addresses_stats[address_index].real_index)" class="marketFooter">Remove</a></div>
+                         </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-sm-6 stats">
+
+                         <table class="table">
+                            <tr>
+                                <td>Pending Balance:</td>
+                                <td><b>{{addresses_stats[address_index].stats.balance | asCoinUnits:selected_pool_stats.coin_units | number: 4}} {{selected_pool.ticker}}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Total Paid:</td>
+                                <td><b>{{addresses_stats[address_index].stats.paid | asCoinUnits:selected_pool_stats.coin_units | number: 4}} {{selected_pool.ticker}}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Last Share Submitted:</td>
+                                <td><b>{{ addresses_stats[address_index].stats.lastShare | amFromUnix | amUtc | timeAgo }}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Hash Rate:</td>
+                                <td><b>{{ addresses_stats[address_index].stats.hashrate || "0H"}}/s</b></td>
+                            </tr>
+                            <tr>
+                                <td>Total Hashes Submitted:</td>
+                                <td><b>{{addresses_stats[address_index].stats.hashes}} </b></td>
+                            </tr>
+                         </table>
+                     </div>
+                     <div class="col-sm-3">
+                        <div class="userChart" data-chart="user_hashrate">
+                           <highchart id="chart1" config="addresses_stats[address_index].configCharts.hashrate" class="span6"></highchart>
+                        </div>
+                     </div>
+                     <div class="col-sm-3">
+                        <div class="userChart" data-chart="user_payments">
+                           <highchart id="chart1" config="addresses_stats[address_index].configCharts.payments" class="span6"></highchart>
+                        </div>
+                     </div>
+                  </div>
+                   <div class="row">
+                      <div class="col-xs-12">
+                               <table class="table" ng-if="addresses_stats[address_index].paymentsList.length">
+                                  <tbody>
+                                     <tr>
+                                        <th>Payment date</th>
+                                        <th>Transaction hash</th>
+                                        <th>Sum</th>
+                                     </tr>
+                                     <tr class="my-repeat-animation small-85" ng-repeat="payment in addresses_stats[address_index].paymentsList">
+                                        <td class="green"><span><span>{{payment.time | amFromUnix | amUtc | amDateFormat:'YYYY-MM-DD HH:mm:ss' }}</span></span><span> (</span><span>{{payment.time | amFromUnix | amUtc | timeAgo}}</span><span>)</span>
+                                        </td>
+                                        <td>
+                                           <p><a href="/blockchain/transaction/?name={{currency_name}}&amp;hash={{payment.hash}}" target="_self">{{payment.hash}}</a></p>
+                                        </td>
+                                        <td>
+                                           <p class="amount">{{payment.amount | asCoinUnits:selected_pool_stats.coin_units | number: coin_unit_fraction}}</p>
+                                        </td>
+                                     </tr>
+                                  </tbody>
+                               </table>
+                                <ul class="pager">
+                                    <li><a href="" ng-click="getPayments(addresses_stats[address_index].last_printed_payment, address_index)"><span>{{ addresses_stats[address_index].paymentsList.length ? 'Load more' : 'Show payment history' }}</span></a></li>
+                                </ul>
+                      </div>
+                   </div>
+               </div>
+            </section>
+         </div>
+         <div class="col-lg-4 grey">
+            <div class="my-mining" ng-if="cryptonator_data.BTC || cryptonator_data.USD">
+               <h5 id="marketHeader">Market</h5>
+               <table class="table">
+                  <tr ng-if="cryptonator_data.BTC">
+                     <td>{{selected_pool.ticker}}:</td>
+                     <td>{{cryptonator_data.BTC}} BTC</td>
+                  </tr>
+                  <tr ng-if="cryptonator_data.USD">
+                     <td>{{selected_pool.ticker}}:</td>
+                     <td>{{cryptonator_data.USD}} USD</td>
+                  </tr>
+                  <tr ng-if="cryptonator_data.USD">
+                     <td>Hash/USD:</td>
+                     <td>{{hashPerUSD}}</td>
+                  </tr>
+               </table>
+               <div class="marketFooter">Updated: {{cryptonator_updated | amFromUnix | amUtc | timeAgo}}</div>
+               <div class="marketFooter">Powered by <a href="https://www.cryptonator.com/">Cryptonator</a></div>
+               <hr />
+            </div>
+            <div id="miningProfitCalc">
+
+               <h5 id="marketHeader" ng-if="!(cryptonator_data.BTC || cryptonator_data.USD)"></h5>
+               <div id="calcHashHolder">
+                  <div class="input-group">
+                     <input type="number" class="form-control" placeholder="Enter Your Hash Rate" ng-model="calcHashRate" ng-change="calcEstimateProfit()" />
+                     <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="calcHashDropdown">
+                        <span id="calcHashUnit" value="1">{{calcUnitName}}/s</span> <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu" id="calcHashUnits" ng-click="calcEstimateProfit()">
+                           <li><a href="#" value="0" ng-click="setCalcUnits(0, 'H')">H/s</a></li>
+                           <li><a href="#" value="1" ng-click="setCalcUnits(1, 'KH')">KH/s</a></li>
+                           <li><a href="#" value="2" ng-click="setCalcUnits(2, 'MH')">MH/s</a></li>
+                        </ul>
+                     </div>
+                     <span class="input-group-addon">=</span>
+                     <span class="input-group-addon" id="calcHashResultsHolder">{{calcProfit | asCoinUnits:selected_pool_stats.coin_units | number: 4}} {{selected_pool.ticker}}/day</span>
+                  </div>
+               </div>
+               <hr />
+            </div>
+            <h5>{{selected_pool.name}} Chat</h5>
+            <iframe ng-src="{{chatURL}}" style="border:0; width:100%; height:500px;"></iframe>
+         </div>
+      </div>
+   </div>
+</div>
+<script src="/js/scripts.js"></script>
+
+<script src="/js/app.js"></script>
+
+
+
+  
+<div>
+   <nav id="footer" class="navbar navbar-default">
+      <div class="shares">
+         <div class="container">
+            <div class="collapse navbar-collapse">
+               <ul class="nav navbar-nav navbar-right">
+                  <li class="copy"><a target="_self" href="/terms-of-use/">Terms of Use</a></li>
+                  <li class="copy"><a target="_self" href="/support/">Support</a></li>
+                  <li class="copy"><a target="_self" href="/"><span>© </span><span>2015</span><span> Democats</span></a></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+   </nav>
+</div>
+
+</div>
+</body>
+</html>
