@@ -58,6 +58,10 @@ layout: default
                            <td><b>{{selected_pool_stats.workers}}</b></td>
                         </tr>
                         <tr>
+                           <td>Minimal payment:</td>
+                           <td><b>{{selected_pool_stats.minPaymentThreshold | asCoinUnits:selected_pool_stats.coin_units | number: 4}} {{selected_pool.ticker}}</b></td>
+                        </tr>
+                        <tr>
                            <td>Total Pool Fee:</td>
                            <td><b>{{selected_pool_stats.fee}}%</b></td>
                         </tr>
