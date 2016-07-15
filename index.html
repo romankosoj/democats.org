@@ -63,7 +63,7 @@
                      <td class="name"><a href="/pool/?name={{cc.currency|lowercase}}" title="{{cc.currency}} pool"><div class="icons {{cc.currency}}"></div><span>{{cc.currency | capitalize}}</span></a></td>
                      <td class="pool">{{cc.pool_hashrate|hashrateValue}} <small>{{cc.pool_hashrate|hashrateUnits}}/s</small></td>
                      <td class="world">{{cc.world_hashrate|hashrateValue}} <small>{{cc.world_hashrate|hashrateUnits}}/s</small></td>
-                     <td class="feeRate">{{cc.fee}}&lt;div ng-show="currency_name == 'karbowanec'&gt; + 3.5 %</td>
+                     <td class="feeRate">{{cc.fee}} &lt;div ng-show="cc.currency == 'karbowanec'&gt;+ 3.5 %</td>
                      <td class="workers">{{cc.workers}}</td>
                   </tr>
                </tbody>
