@@ -66,12 +66,10 @@ layout: default
                            <td><b>{{selected_pool_stats.fee}}%</b></td>
                         </tr>
 
-            <div ng-show="currency_name == 'karbowanec'>
-                        <tr>
+                        <tr ng-show="currency_name == 'karbowanec'>
                            <td>Donation to Core:</td>
                            <td><b>3.5%</b></td>
                         </tr>
-            </div>
 
                         <tr>
                            <td>Block Found Every:</td>
