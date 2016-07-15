@@ -65,6 +65,14 @@ layout: default
                            <td>Total Pool Fee:</td>
                            <td><b>{{selected_pool_stats.fee}}%</b></td>
                         </tr>
+
+            <div ng-show="currency_name == 'karbowanec'>
+                        <tr>
+                           <td>Donation to Core:</td>
+                           <td><b>3.5%</b></td>
+                        </tr>
+            </div>
+
                         <tr>
                            <td>Block Found Every:</td>
                            <td><b>{{(current_date/1000 - (data.network.difficulty / data.pool.hashrate) | amFromUnix | amUtc | timeAgo).slice(0,-4)}} (est.)</b></td>
