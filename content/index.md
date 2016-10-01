@@ -141,8 +141,6 @@ layout: default
           </table>
         </div>
 <hr>
-        <h5>Democats Chat</h5>
-<iframe src="https://kiwiirc.com/client/irc.kiwiirc.com/?&theme=mini#democats" style="border:0; width:100%; height:500px;"></iframe>
 
       </div>
    </div>

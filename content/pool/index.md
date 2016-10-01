@@ -183,29 +183,27 @@ layout: default
             </section>
          </div>
          <div class="col-lg-4 grey">
-            <div class="my-mining" ng-if="cryptonator_data.BTC || cryptonator_data.USD">
+            <div class="my-mining" ng-if="coinmarketcap_data[0]">
                <h5 id="marketHeader">Market</h5>
                <table class="table">
-                  <tr ng-if="cryptonator_data.BTC">
+                  <tr>
                      <td>{{selected_pool.ticker}}:</td>
-                     <td>{{cryptonator_data.BTC}} BTC</td>
+                     <td>{{coinmarketcap_data[0].price_btc | number: 8}} BTC</td>
                   </tr>
-                  <tr ng-if="cryptonator_data.USD">
+                  <tr>
                      <td>{{selected_pool.ticker}}:</td>
-                     <td>{{cryptonator_data.USD}} USD</td>
+                     <td>{{coinmarketcap_data[0].price_usd | number: 6}} USD</td>
                   </tr>
-                  <tr ng-if="cryptonator_data.USD">
+                  <tr>
                      <td>Hash/USD:</td>
                      <td>{{hashPerUSD}}</td>
                   </tr>
                </table>
-               <div class="marketFooter">Updated: {{cryptonator_updated | amFromUnix | amUtc | timeAgo}}</div>
-               <div class="marketFooter">Powered by <a href="https://www.cryptonator.com/">Cryptonator</a></div>
                <hr>
             </div>
             <div id="miningProfitCalc">
 
-               <h5 id="marketHeader" ng-if="!(cryptonator_data.BTC || cryptonator_data.USD)"></h5>
+               <h5 id="marketHeader" ng-if="!(coinmarketcap_data[0])"></h5>
                <div id="calcHashHolder">
                   <div class="input-group">
                      <input type="number" class="form-control" placeholder="Enter Your Hash Rate" ng-model="calcHashRate" ng-change="calcEstimateProfit()">
@@ -225,8 +223,6 @@ layout: default
                </div>
                <hr>
             </div>
-            <h5>{{selected_pool.name}} Chat</h5>
-            <iframe ng-src="{{chatURL}}" style="border:0; width:100%; height:500px;"></iframe>
          </div>
       </div>
    </div>
