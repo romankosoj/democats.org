@@ -264,152 +264,25 @@
 .container {
 }
 
-header.old-header {
-    position: relative;
-    z-index: 2
+
+.navbar-inverse {
+    border-radius: 0px
 }
-header.old-header .container {
-    min-width: 1250px
-}
-header.old-header .navbar {
-    min-width: 1250px;
-    border-width: 0;
-    border-radius: 0
-}
-header.old-header .logo-wrapper {
-    position: relative;
-    width: 75pt;
-    height: 55px;
-    line-height: 55px
-}
-header.old-header .logo-wrapper .logo {
-    vertical-align: bottom;
-    cursor: pointer
-}
-header.old-header .logo-wrapper a {
-    font-size: 15px;
+.navbar-inverse .navbar-brand {
+    width:200px;
     color: #fff;
 }
-header.old-header .nav {
-    width: 995px;
-    height: 55px;
-    line-height: 55px;
-    background-color: transparent;
-    border-radius: 0
+.navbar-inverse .navbar-nav li a {
+    color: #fff;
 }
-header.old-header .nav .affiliate {
-    display: inline-block;
-    height: 30px;
-    padding-left: 40px;
-    margin-left: 10px;
-    line-height: 30px;
-    cursor: pointer;
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAAvCAMAAABE+WOeAAAAe1BMVEUAAADf39/f39/h4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHf39/f39/h4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg4ODh4eHh4eHh4eHf39/h4eGZOJElAAAAKHRSTlMA3mrweve+FOYGTyAfgSWtb2bb0aGRXC0L+ZdMGny3tD88zMWYQkHfKPcNrgAAAZFJREFUSMelltmWgyAMhm1Bi7buu7XbdBne/wnnUAPxUBxkJldN/i9AMSZ6Jgtp0Rc09NbamQs7r01o+GTNSj4FPl1GdtkQt9IJgA9koI2HbDfHr0ToFLwa+Bp8Khxyna1OJiCa3MR/e34yudEkEtwh0w4QEaFH2vEyxQ8QYWrDnOdqOQbqoPgYIiUekePPEtRYRVqInIw8BbXF0OkduIdGPv+Si6FFASvj+8HEbzcJLVkQoYbKAXkM7pFYTuAabkvgK3BM6F781SFuSRgrX5RDNQJuSTjKB0qYEW/SoE7QpT2XRkYMJ3WQNuJdvQjFPyqh4miVih594V9Cj2rV2vkz3u+0iqdeAVIOyo3P7SZrAvzC67mL9a7ru57f9X4+738kCmcf92+wLWOA97CppR72sn7o5rAGF3/6yZ8dVKsNx/qHBCsOPCRYcOTNCdgfaAY48CohhP6g9x+SGPvJN/Yfrb9RA4/jo3Xtn+792b3/u88XnF/xwvyKcX7hfHz8Oh8f2e6v8/f/8z20fD+4fJ/8ANVyX1EauZeRAAAAAElFTkSuQmCC) left center no-repeat;
-    background-size: 30px 30px
+.navbar-inverse .navbar-nav .dropdown-menu li a {
+    color: #333;
 }
-header.old-header .nav .affiliate:hover a {
-    color: #00aced;
-    text-decoration: none;
-    border-bottom: 3px solid #00aced
+.navbar-form .form-control {
+    width:400px;
 }
-header.old-header .nav .affiliate a {
-    font-size: 13px;
-    color: #fff
-}
-header.old-header .nav .affiliate a.active,
-header.old-header .nav .affiliate a:hover {
-    color: #00aced;
-    text-decoration: none;
-    cursor: pointer;
-    border-bottom: 3px solid #00aced
-}
-header.old-header .nav .links .iconed-part>a,
-header.old-header .nav .links>a {
-    padding: 0 20px;
-    font-size: 13px;
-    color: #fff
-}
-header.old-header .nav .links .iconed-part>a.active,
-header.old-header .nav .links .iconed-part>a:hover,
-header.old-header .nav .links>a.active,
-header.old-header .nav .links>a:hover {
-    color: #00aced;
-    text-decoration: none
-}
-header.old-header .nav .links .iconed-part>a.simple,
-header.old-header .nav .links>a.simple {
-    padding: 0;
-    margin: 0 10px
-}
-header.old-header .nav .links .iconed-part>a.simple.active,
-header.old-header .nav .links .iconed-part>a.simple:hover,
-header.old-header .nav .links>a.simple.active,
-header.old-header .nav .links>a.simple:hover {
-    border-bottom: 3px solid #00aced
-}
-header.old-header .nav .links .iconed-part>a.simple+.iconed,
-header.old-header .nav .links>a.simple+.iconed {
-    margin-left: 20px;
-    border-left: 1px solid #474747
-}
-header.old-header .nav .links .iconed-part>a.iconed,
-header.old-header .nav .links>a.iconed {
-    display: inline-block;
-    height: 54px;
-    padding-left: 36px;
-    background: no-repeat 14px 18px;
-    background-size: auto 1pc!important;
-    border-right: 1px solid #474747
-}
-header.old-header .nav .links .iconed-part>a.iconed.active,
-header.old-header .nav .links .iconed-part>a.iconed:hover,
-header.old-header .nav .links>a.iconed.active,
-header.old-header .nav .links>a.iconed:hover {
-    background-color: #3e3e3e;
-}
-header.old-header .nav .links .iconed-part>a.iconed.iconed-dashboard,
-header.old-header .nav .links>a.iconed.iconed-dashboard {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAkCAMAAADfNcjQAAAAeFBMVEUAAAD////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////GqOSsAAAAJ3RSTlMA+fUFAvzpk1pRQO/iyblIKRXWqjgxIREKwrOcZdrQoox+d3AIhh76n8b1AAAA/UlEQVR4AYXS246qQBCF4QUCjch5I4qi24Mz6/3fcAY6kUpb9Hy3P6FTlYLDjPCJzoxTX/9PMthizeYfJ2GHFU3LWdL/9cXlAF0V0iojfydvUGwDLpRh05hCWKszCtcXXFlLySiLugcUKnyqCy4SbRvRQ/zkDM0+51sGxchFoSz0SXrX9eAkTmhd3F/cbU+bgpZzPF+0HTiWnA2QbqQ9ObH5XnQjOrA5cfKUBy07cCxI8iQOeu6VOMCcZO4cdAUhi8lAPsjQ2a0hQ0xepdrR7NgC76F3sluGZuqD7R0+dEEPHIrVjs3426+277HCvp+sdtS51qU+Z1LD53vw9R/WNTNb+Lnv2QAAAABJRU5ErkJggg==)
-}
-header.old-header .nav .links .iconed-part>a.iconed.iconed-dashboard.active,
-header.old-header .nav .links .iconed-part>a.iconed.iconed-dashboard:hover,
-header.old-header .nav .links>a.iconed.iconed-dashboard.active,
-header.old-header .nav .links>a.iconed.iconed-dashboard:hover {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAkCAMAAADfNcjQAAAAaVBMVEUAAABBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNED/zg7AAAAInRSTlMA+fMCEwXrWPzGupNCL9c5CuNPSSYgz7OrpJyKdmDdfmoINphNcAAAAPZJREFUeAGF0ul2gjAQxfGbRUDCIgraKmh73/8heyBtnZTB/r7+OWTJIOXChFfclUX+qr+TNMfNvps7aVts8A0XWf/fF3cPXWUZlU7tJ8MfN60fDZ+Uw+YFBVuvzvjGxPlzvcWGUlAu6mEonLDW7/mUeay5UfzkCk3d8VcFxYc8idO6NK36yFmRMWocUo/Yc7/Xb/z23YFDyUUps4vd5PLmB9EDKUZyd+FslAMtO3BY9nERA7108QC+I9mlj21FB6qCNMmCtkIikDYuV6od3rKRvcVfgSFuV3apNQPgtzt2E+DPS89qbChl1/Sd7JrhLrtm2PfY9gXe8izK3OuTEQAAAABJRU5ErkJggg==)
-}
-header.old-header .nav .links .iconed-part>a.iconed.iconed-stats,
-header.old-header .nav .links>a.iconed.iconed-stats {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAD1BMVEUAAAD///////////////+PQt5oAAAABHRSTlMAxAa3JmrZrwAAADRJREFUGNNjYGBQYkAFTMYKqALKLkaoCkxcnBVQFbgAlQjCAYYARAu6oXitxXDYqEup71IAkk4WUfPBKn8AAAAASUVORK5CYII=)
-}
-header.old-header .nav .links .iconed-part>a.iconed.iconed-stats.active,
-header.old-header .nav .links .iconed-part>a.iconed.iconed-stats:hover,
-header.old-header .nav .links>a.iconed.iconed-stats.active,
-header.old-header .nav .links>a.iconed.iconed-stats:hover {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeBAMAAAC/JAEaAAAAElBMVEUAAABBmNFBmNFBmNFBmNFBmNHzsm4nAAAABXRSTlMAxAe3Bnzs9C8AAAA7SURBVBjTY2BgcGJABSzGCqgCzqFGKHwm09BgFCXKoaFAJYJwgCGA0ILQA1SAaiq6tQxKKLxRl1LfpQD4yRl7JOAmmAAAAABJRU5ErkJggg==)
-}
-header.old-header .nav .links .iconed-part>a.iconed.iconed-mining,
-header.old-header .nav .links>a.iconed.iconed-mining {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAeCAMAAABg6AyVAAAAhFBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8g2+bRAAAAK3RSTlMAAeqMGRXTXlc3CMiTBDErHA7Yzmz17uTVnlD6trCoZkYj39zBm3JMP4B4jTT9dAAAAXFJREFUeNqFk1migyAMRQEVFOdZq1atndn//h76UNFimy9IDkluALC3kJQxqioUlyQE3y3UsibxDAgNr20y7Sv+zMtg3elO/jxmH+ixP/w4Yn1kfbhyT81COxEr2i9OE7tK+BRBwdaoXzMQJVzP7jNjg7GkqFUsTcM5zhi7ztXdjCpgKxaL4MK4ObPftlQtN2K6nB3NFP7mtCcN4tilkNRmE5wFQoGtmfJNBjd0Tsxlonoz0UKZb97rzNHnIEGv3SO4VyO91tc1JLp6YX/fFGYphwdXkn+5T3mx8ckyxxYal+QD3wXIV7AaoFc+bNntIR1o2p4tRhaAkOeWa45k5KtZXhgxa5M6ApW7YXXBTmq2sFuBlG7YiGuDc7Sg28cDCv+I5eK3H6EAZSJrEKzSkhJ0sdzW+ZiFcQegbcr0IQtMm8esnLf224J8Gk0b9b/ZPmpF54jA7ygkKFl/FH579Iik3hvHlnSyu+GUHViKb91/5T9yCB9pU2csRQAAAABJRU5ErkJggg==);
-    background-position: 8px 18px
-}
-header.old-header .nav .links .iconed-part>a.iconed.iconed-mining.active,
-header.old-header .nav .links .iconed-part>a.iconed.iconed-mining:hover,
-header.old-header .nav .links>a.iconed.iconed-mining.active,
-header.old-header .nav .links>a.iconed.iconed-mining:hover {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAeCAMAAABg6AyVAAAAeFBMVEUAAABBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNFBmNEE5neZAAAAJ3RSTlMA6tcv1F43GRVWCMidiwSQTh0Ozm0m9d365JVnRe20qHbuwbiwgD6JWg6OAAABYklEQVR4AY3S6ZKiMBSG4S+EhCUBZAfBRduec/93OBZzEGFC28+vVHwlJ1XBVqFsKbpOlFYV+FmRnM6DDoFQDo9T8mP+p7c5XoJjP2LXQRw2f+YNh1pobMhews1UvIhrzCI/dQ/hze2XWGqj4HKety9EbQh2+IJD3BTz70R0n09Pb7Ej1iUv8paejmBGO+LojEnQ0iTi/ccBG6HKjOX1cJriW843MElUYJHb06WKJFjwmGq+mYyu59sxAFPiu8DKtaOn5fwgEzzVt19vh/KpIaI2xYtuq+m7fvh/S5lZ7sj3VkAuakebIL4T3fFGigBJ4myBwhCtzswSeHLTekTZv4MF6dWnPXQp3gWvFlDrOO3QxHstUi9ePx4eY9OyHJsxbIVFwg/IqbIYSyzSy36LcgRM9F5jV2QA6D7HL+S9xtPg1fio9gaeXCh8oEQFpkv/KmPsiOXVLzUWo/Ub2tH4dsTkLyHRG/pkgsHpAAAAAElFTkSuQmCC)
-}
-header.old-header .nav .links .iconed-part>a.btn,
-header.old-header .nav .links>a.btn {
-    padding: 4px 8px;
-    margin-left: 20px
-}
-header.old-header .nav .links .iconed-part>a.btn:hover,
-header.old-header .nav .links>a.btn:hover {
-    color: #fff
-}
-header.old-header .nav .links .iconed-part .iconed:first-of-type {
-    margin-left: 20px;
-    border-left: 1px solid #474747
+.navbar .navbar-center {
+  text-align: center;
 }
 
 

@@ -39,30 +39,44 @@
 <div ng-controller="PoolBlocksCtl">
 
 
-<header class="old-header ng-scope">
-   <div class="navbar navbar-inverse">
-      <div class="container">
-         <div class="row">
-            <div class="col-xs-2">
-               <div class="navbar-header">
-                  <div class="logo-wrapper"><a target="_self" href="/" title="{{currency_name}} pool"><img width="16" height="16" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTYuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjMycHgiIGhlaWdodD0iMzJweCIgdmlld0JveD0iMCAwIDI2Mi42NCAyNjIuNjQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDI2Mi42NCAyNjIuNjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNMjYyLjY0LDEzMS4zMjJDMjYyLjY0LDU4LjkwOCwyMDMuNzI4LDAsMTMxLjMyLDBDNTguOTEzLDAsMCw1OC45MDgsMCwxMzEuMzIyQzAsMjAzLjczMSw1OC45MTMsMjYyLjY0LDEzMS4zMiwyNjIuNjQgICAgQzIwMy43MjgsMjYyLjY0LDI2Mi42NCwyMDMuNzI4LDI2Mi42NCwxMzEuMzIyeiBNMTMxLjMyLDI0OC4zMDNjLTY0LjUwNCwwLTExNi45ODMtNTIuNDgxLTExNi45ODMtMTE2Ljk4ICAgIGMwLTY0LjUwNiw1Mi40NzktMTE2Ljk4NSwxMTYuOTgzLTExNi45ODVjNjQuNTAxLDAsMTE2Ljk4Miw1Mi40NzUsMTE2Ljk4MiwxMTYuOTg1ICAgIEMyNDguMzAzLDE5NS44MywxOTUuODIxLDI0OC4zMDMsMTMxLjMyLDI0OC4zMDN6IiBmaWxsPSIjRkZGRkZGIi8+CgkJPHBhdGggZD0iTTEzMS4zMiwyNC4zOTdjLTU4Ljk1NSwwLTEwNi45MTgsNDcuOTYzLTEwNi45MTgsMTA2LjkxNmMwLDU4Ljk1NSw0Ny45NjMsMTA2LjkyMywxMDYuOTE4LDEwNi45MjMgICAgYzU4Ljk1NywwLDEwNi45MTYtNDcuOTU5LDEwNi45MTYtMTA2LjkyM0MyMzguMjM2LDcyLjM2NSwxOTAuMjc3LDI0LjM5NywxMzEuMzIsMjQuMzk3eiBNMTMxLjMyLDIyMy44OTggICAgYy01MS4wNTEsMC05Mi41ODEtNDEuNTI4LTkyLjU4MS05Mi41ODZjMC01MS4wNDgsNDEuNTMtOTIuNTc4LDkyLjU4MS05Mi41NzhjNTEuMDUxLDAsOTIuNTc4LDQxLjUzLDkyLjU3OCw5Mi41NzggICAgQzIyMy44OTgsMTgyLjM3LDE4Mi4zNzEsMjIzLjg5OCwxMzEuMzIsMjIzLjg5OHoiIGZpbGw9IiNGRkZGRkYiLz4KCQk8cGF0aCBkPSJNMTUzLjI5LDEzOS41NmMtMS4yODMtNC40MzgtMi41NjYtOC45MzgtNC40NTctMTMuMTMzYy0zLjM1MS03LjQxNC0xMS40Mi0xMS4zMTMtMTkuMzU5LTkuNjA3ICAgIGMtNC4xMDQsMC44ODQtNy43ODUsMi45NDQtMTEuNDE2LDUuMDI0Yy00LjA5MSwyLjMzNi04LjEzLDQuNzg0LTEyLjMzMSw2LjkxYy04LjA0Myw0LjA3Ni0xNi4xOTcsNy45MjctMjQuMjczLDExLjkzMiAgICBjLTMuMTAxLDEuNTQtNS44OTIsMy41MjMtOC4wMzQsNi4zMThjLTQuMDE5LDUuMjQ2LTYuNjMyLDExLjA4NS03LjIyLDE3LjY5M2MtMC42MDIsNi43NzYsMS40MzgsMTIuNTA4LDcuMTczLDE2LjU4MiAgICBjMi44MSwxLjk5OCw1Ljk3NCwzLjIyMSw5LjMxNSwzLjkyNWM3LjcyNywxLjYzOSwxNS41MzcsMS43NjUsMjMuMzY4LDEuMDc4YzMuMDY5LTAuMjc1LDYuMDY1LTAuMTY4LDguOCwxLjQxOSAgICBjMS42ODMsMC45NzEsMy4zNjMsMS45NzksNC44ODksMy4xNzRjNC4wMzcsMy4xNjQsNy45NzYsNi40NjksMTEuOTg1LDkuNjc1YzMuODc2LDMuMTA0LDguMTgsNS4xNTIsMTMuMzIyLDUuMzI1ICAgIGMxLjY5OS0wLjMxNywzLjQ0OS0wLjQ3Nyw1LjA5Mi0wLjk3NmM2LjA2Mi0xLjg2MiwxMC40MTItNS45MTMsMTMuNDE4LTExLjMzNmM0Ljg1LTguNzA5LDUuNjAxLTE3LjU2MiwwLjU3OS0yNi41OTQgICAgQzE1OS4zMjksMTU4LjMxNiwxNTYuMDIxLDE0OS4wNDgsMTUzLjI5LDEzOS41NnoiIGZpbGw9IiNGRkZGRkYiLz4KCQk8cGF0aCBkPSJNMjA2LjkyOSwxMzIuNzAzYy0xLjE5NC00LjU5OS0zLjQxNi04LjU4LTcuNjYzLTExLjAxOWMtNS40NjEtMy4xMzQtMTAuOTIxLTIuNDA4LTE1Ljk3MSwwLjg4NCAgICBjLTguODU0LDUuNzczLTEyLjQ1MiwxNC40NTctMTMuMDk2LDI0Ljg3NGMwLjE4NywxLjU4NywwLjMwOCwzLjM2OSwwLjY0LDUuMTFjMC4yNjYsMS4zNzIsMC42NjcsMi43NDQsMS4yMDgsNC4wMzcgICAgYzIuMTY2LDUuMTYxLDUuNzAzLDguODIsMTEuNDM1LDkuNzkxYzQuNjQ0LDAuNzk0LDguNzU2LTAuNzI4LDEyLjQ3OS0zLjM5N0MyMDQuOTMyLDE1Ni41NzEsMjA5LjY5NiwxNDMuMzg3LDIwNi45MjksMTMyLjcwM3oiIGZpbGw9IiNGRkZGRkYiLz4KCQk8cGF0aCBkPSJNMTE4Ljk2NiwxMDIuMzU4YzUuNDA5LDIuNDk0LDEwLjUzNCwxLjM1OCwxNS4zMTUtMS43NjVjOS40NTEtNi4xNywxNC42NTktMTkuOTU2LDExLjczMy0zMC44NTggICAgYy0xLjI1MS00LjYzNS0zLjQ5MS04LjYzNC03LjgxMy0xMS4wNTRjLTUuMzA0LTIuOTY4LTEwLjYyNC0yLjMxMi0xNS41NDUsMC44MTJjLTkuMDE5LDUuNzI3LTEyLjY4MywxNC40NjMtMTMuMzk3LDI1LjQyNiAgICBjMC4zMDEsMS43OTIsMC41MDIsNC4yNDcsMS4xNDgsNi41ODFDMTExLjcyNiw5Ni4yNywxMTQuMzIsMTAwLjIxOCwxMTguOTY2LDEwMi4zNTh6IiBmaWxsPSIjRkZGRkZGIi8+CgkJPHBhdGggZD0iTTE4OC4wNTYsOTIuMzU0Yy0wLjIxNS0xLjM3NS0wLjQwMS0zLjY1NC0wLjk0My01Ljg1M2MtMC45OTgtNC4wOTEtMy4wNDMtNy42MDUtNi41MzMtMTAuMTE0ICAgIGMtNC44NzMtMy40OTQtMTEuMjktMy40MzUtMTcuMDQ1LDAuMjRjLTYuMjQ5LDMuOTg2LTkuOTQsOS44NTQtMTEuODU0LDE2Ljg3NGMtMS42OTgsNi4yMTItMS42MjQsMTIuMzc3LDEuMTc3LDE4LjMxMyAgICBjMi45NDksNi4yMzgsOC41NjgsOS40ODEsMTUuMDMyLDguNjg4YzQuMTgyLTAuNTE2LDcuNjk2LTIuNTA0LDEwLjY5Ny01LjM2N0MxODQuODA3LDEwOS4xOTMsMTg3LjY5MSwxMDEuNzc0LDE4OC4wNTYsOTIuMzU0eiIgZmlsbD0iI0ZGRkZGRiIvPgoJCTxwYXRoIGQ9Ik05MC45OTksMTI1LjA2M2M5Ljc4Mi02LjM0MywxNS4wMTItMjAuNzcxLDExLjUzNy0zMS44OTVDMTAxLDg4LjI1LDk4LjI5MSw4NC4yMzYsOTMuMzMsODIuMjcxICAgIGMtNS41MTktMi4xODQtMTAuNjUzLTAuODYzLTE1LjIzMSwyLjQ5NUM3MC4wNzIsOTAuNjYsNjYuNjYsOTguOTYsNjYuMDgxLDEwOS42MThjMC4zMTUsMS43MDYsMC41NjIsNC4zNjksMS4zMTQsNi44NzcgICAgQzcwLjY4MywxMjcuNDM5LDgxLjQwOCwxMzEuMjg0LDkwLjk5OSwxMjUuMDYzeiIgZmlsbD0iI0ZGRkZGRiIvPgoJPC9nPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" /></a> <a target="_self" href="/" title="Cryptonote pools">Democats</a></div>
-               </div>
-            </div>
-            <div class="col-xs-8">
-               <div class="nav navbar-nav">
-                  <div class="links pull-left"><span class="iconed-part">
-                  <a target="_self" class="" href="/pool/?name={{currency_name}}" title="{{currency_name}} pool">Home</a>
-                  <a target="_self" class="" href="/pool/how-to-mine/?name={{currency_name}}" title="how to mine {{currency_name}}">How to mine</a>
-                  <a target="_self" class="" href="/pool/blocks/?name={{currency_name}}" title="{{currency_name}} democats blocks">Pool blocks</a>
-                  <a target="_self" class="" href="/blockchain/?name={{currency_name}}" title="{{currency_name}} block explorer">Blockchain explorer</a>
-                  <a target="_self" class="" href="/charts/?name={{currency_name}}" title="{{currency_name}} charts">Charts</a>
-                  </span></div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-</header>
+<nav class="navbar navbar-inverse ng-scope">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" target="_self" href="/" title="{{currency_name}} pool"><span><img width="16" height="16" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTYuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjMycHgiIGhlaWdodD0iMzJweCIgdmlld0JveD0iMCAwIDI2Mi42NCAyNjIuNjQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDI2Mi42NCAyNjIuNjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNMjYyLjY0LDEzMS4zMjJDMjYyLjY0LDU4LjkwOCwyMDMuNzI4LDAsMTMxLjMyLDBDNTguOTEzLDAsMCw1OC45MDgsMCwxMzEuMzIyQzAsMjAzLjczMSw1OC45MTMsMjYyLjY0LDEzMS4zMiwyNjIuNjQgICAgQzIwMy43MjgsMjYyLjY0LDI2Mi42NCwyMDMuNzI4LDI2Mi42NCwxMzEuMzIyeiBNMTMxLjMyLDI0OC4zMDNjLTY0LjUwNCwwLTExNi45ODMtNTIuNDgxLTExNi45ODMtMTE2Ljk4ICAgIGMwLTY0LjUwNiw1Mi40NzktMTE2Ljk4NSwxMTYuOTgzLTExNi45ODVjNjQuNTAxLDAsMTE2Ljk4Miw1Mi40NzUsMTE2Ljk4MiwxMTYuOTg1ICAgIEMyNDguMzAzLDE5NS44MywxOTUuODIxLDI0OC4zMDMsMTMxLjMyLDI0OC4zMDN6IiBmaWxsPSIjRkZGRkZGIi8+CgkJPHBhdGggZD0iTTEzMS4zMiwyNC4zOTdjLTU4Ljk1NSwwLTEwNi45MTgsNDcuOTYzLTEwNi45MTgsMTA2LjkxNmMwLDU4Ljk1NSw0Ny45NjMsMTA2LjkyMywxMDYuOTE4LDEwNi45MjMgICAgYzU4Ljk1NywwLDEwNi45MTYtNDcuOTU5LDEwNi45MTYtMTA2LjkyM0MyMzguMjM2LDcyLjM2NSwxOTAuMjc3LDI0LjM5NywxMzEuMzIsMjQuMzk3eiBNMTMxLjMyLDIyMy44OTggICAgYy01MS4wNTEsMC05Mi41ODEtNDEuNTI4LTkyLjU4MS05Mi41ODZjMC01MS4wNDgsNDEuNTMtOTIuNTc4LDkyLjU4MS05Mi41NzhjNTEuMDUxLDAsOTIuNTc4LDQxLjUzLDkyLjU3OCw5Mi41NzggICAgQzIyMy44OTgsMTgyLjM3LDE4Mi4zNzEsMjIzLjg5OCwxMzEuMzIsMjIzLjg5OHoiIGZpbGw9IiNGRkZGRkYiLz4KCQk8cGF0aCBkPSJNMTUzLjI5LDEzOS41NmMtMS4yODMtNC40MzgtMi41NjYtOC45MzgtNC40NTctMTMuMTMzYy0zLjM1MS03LjQxNC0xMS40Mi0xMS4zMTMtMTkuMzU5LTkuNjA3ICAgIGMtNC4xMDQsMC44ODQtNy43ODUsMi45NDQtMTEuNDE2LDUuMDI0Yy00LjA5MSwyLjMzNi04LjEzLDQuNzg0LTEyLjMzMSw2LjkxYy04LjA0Myw0LjA3Ni0xNi4xOTcsNy45MjctMjQuMjczLDExLjkzMiAgICBjLTMuMTAxLDEuNTQtNS44OTIsMy41MjMtOC4wMzQsNi4zMThjLTQuMDE5LDUuMjQ2LTYuNjMyLDExLjA4NS03LjIyLDE3LjY5M2MtMC42MDIsNi43NzYsMS40MzgsMTIuNTA4LDcuMTczLDE2LjU4MiAgICBjMi44MSwxLjk5OCw1Ljk3NCwzLjIyMSw5LjMxNSwzLjkyNWM3LjcyNywxLjYzOSwxNS41MzcsMS43NjUsMjMuMzY4LDEuMDc4YzMuMDY5LTAuMjc1LDYuMDY1LTAuMTY4LDguOCwxLjQxOSAgICBjMS42ODMsMC45NzEsMy4zNjMsMS45NzksNC44ODksMy4xNzRjNC4wMzcsMy4xNjQsNy45NzYsNi40NjksMTEuOTg1LDkuNjc1YzMuODc2LDMuMTA0LDguMTgsNS4xNTIsMTMuMzIyLDUuMzI1ICAgIGMxLjY5OS0wLjMxNywzLjQ0OS0wLjQ3Nyw1LjA5Mi0wLjk3NmM2LjA2Mi0xLjg2MiwxMC40MTItNS45MTMsMTMuNDE4LTExLjMzNmM0Ljg1LTguNzA5LDUuNjAxLTE3LjU2MiwwLjU3OS0yNi41OTQgICAgQzE1OS4zMjksMTU4LjMxNiwxNTYuMDIxLDE0OS4wNDgsMTUzLjI5LDEzOS41NnoiIGZpbGw9IiNGRkZGRkYiLz4KCQk8cGF0aCBkPSJNMjA2LjkyOSwxMzIuNzAzYy0xLjE5NC00LjU5OS0zLjQxNi04LjU4LTcuNjYzLTExLjAxOWMtNS40NjEtMy4xMzQtMTAuOTIxLTIuNDA4LTE1Ljk3MSwwLjg4NCAgICBjLTguODU0LDUuNzczLTEyLjQ1MiwxNC40NTctMTMuMDk2LDI0Ljg3NGMwLjE4NywxLjU4NywwLjMwOCwzLjM2OSwwLjY0LDUuMTFjMC4yNjYsMS4zNzIsMC42NjcsMi43NDQsMS4yMDgsNC4wMzcgICAgYzIuMTY2LDUuMTYxLDUuNzAzLDguODIsMTEuNDM1LDkuNzkxYzQuNjQ0LDAuNzk0LDguNzU2LTAuNzI4LDEyLjQ3OS0zLjM5N0MyMDQuOTMyLDE1Ni41NzEsMjA5LjY5NiwxNDMuMzg3LDIwNi45MjksMTMyLjcwM3oiIGZpbGw9IiNGRkZGRkYiLz4KCQk8cGF0aCBkPSJNMTE4Ljk2NiwxMDIuMzU4YzUuNDA5LDIuNDk0LDEwLjUzNCwxLjM1OCwxNS4zMTUtMS43NjVjOS40NTEtNi4xNywxNC42NTktMTkuOTU2LDExLjczMy0zMC44NTggICAgYy0xLjI1MS00LjYzNS0zLjQ5MS04LjYzNC03LjgxMy0xMS4wNTRjLTUuMzA0LTIuOTY4LTEwLjYyNC0yLjMxMi0xNS41NDUsMC44MTJjLTkuMDE5LDUuNzI3LTEyLjY4MywxNC40NjMtMTMuMzk3LDI1LjQyNiAgICBjMC4zMDEsMS43OTIsMC41MDIsNC4yNDcsMS4xNDgsNi41ODFDMTExLjcyNiw5Ni4yNywxMTQuMzIsMTAwLjIxOCwxMTguOTY2LDEwMi4zNTh6IiBmaWxsPSIjRkZGRkZGIi8+CgkJPHBhdGggZD0iTTE4OC4wNTYsOTIuMzU0Yy0wLjIxNS0xLjM3NS0wLjQwMS0zLjY1NC0wLjk0My01Ljg1M2MtMC45OTgtNC4wOTEtMy4wNDMtNy42MDUtNi41MzMtMTAuMTE0ICAgIGMtNC44NzMtMy40OTQtMTEuMjktMy40MzUtMTcuMDQ1LDAuMjRjLTYuMjQ5LDMuOTg2LTkuOTQsOS44NTQtMTEuODU0LDE2Ljg3NGMtMS42OTgsNi4yMTItMS42MjQsMTIuMzc3LDEuMTc3LDE4LjMxMyAgICBjMi45NDksNi4yMzgsOC41NjgsOS40ODEsMTUuMDMyLDguNjg4YzQuMTgyLTAuNTE2LDcuNjk2LTIuNTA0LDEwLjY5Ny01LjM2N0MxODQuODA3LDEwOS4xOTMsMTg3LjY5MSwxMDEuNzc0LDE4OC4wNTYsOTIuMzU0eiIgZmlsbD0iI0ZGRkZGRiIvPgoJCTxwYXRoIGQ9Ik05MC45OTksMTI1LjA2M2M5Ljc4Mi02LjM0MywxNS4wMTItMjAuNzcxLDExLjUzNy0zMS44OTVDMTAxLDg4LjI1LDk4LjI5MSw4NC4yMzYsOTMuMzMsODIuMjcxICAgIGMtNS41MTktMi4xODQtMTAuNjUzLTAuODYzLTE1LjIzMSwyLjQ5NUM3MC4wNzIsOTAuNjYsNjYuNjYsOTguOTYsNjYuMDgxLDEwOS42MThjMC4zMTUsMS43MDYsMC41NjIsNC4zNjksMS4zMTQsNi44NzcgICAgQzcwLjY4MywxMjcuNDM5LDgxLjQwOCwxMzEuMjg0LDkwLjk5OSwxMjUuMDYzeiIgZmlsbD0iI0ZGRkZGRiIvPgoJPC9nPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" /></span> Democats</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="SearchBlockchainCtl">
+      <ul class="nav navbar-nav">
+        <li><a target="_self" class="" href="/pool/?name={{currency_name}}" title="{{currency_name}} pool">Home</a></li>
+        <li><a target="_self" class="" href="/pool/how-to-mine/?name={{currency_name}}" title="how to mine {{currency_name}}">How to mine</a></li>
+        <li><a target="_self" class="" href="/pool/blocks/?name={{currency_name}}" title="{{currency_name}} democats blocks">Pool blocks</a></li>
+        <li><a target="_self" class="" href="/blockchain/?name={{currency_name}}" title="{{currency_name}} block explorer">Blockchain explorer</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Charts <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a target="_self" href="/charts/?name={{currency_name}}&amp;type=basic" title="{{currency_name}} basic charts">Basic</a></li>
+            <li><a target="_self" href="/charts/?name={{currency_name}}&amp;type=transactions" title="{{currency_name}} transactions charts">Transactions</a></li>
+            <li><a target="_self" href="/charts/?name={{currency_name}}&amp;type=blocks" title="{{currency_name}} blocks charts">Blocks</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="navbar-form navbar-right">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="block height / block hash / transaction hash" ng-model="search" />
+        </div>
+        <button type="submit" class="btn btn-default" ng-click="searchFor(search)">Search</button>
+      </form>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
 
 <div class="container">
    <noscript></noscript>
