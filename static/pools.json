@@ -1,0 +1,45 @@
+{
+    "pools": [{
+        "name": "Bytecoin",
+        "ticker": "BCN",
+        "poolmining": "pool.democats.org:45500",
+        "poolrpc": "http://pool.democats.org:7603/",
+        "daemonrpc": "http://nodes.democats.org:7601/"
+    }, {
+        "name": "Dashcoin",
+        "ticker": "DSH",
+        "poolmining": "pool.democats.org:45510",
+        "poolrpc": "http://pool.democats.org:7613/",
+        "daemonrpc": "http://pool.democats.org:7611/"
+    }, {
+        "name": "Magnatoj",
+        "ticker": "XMN",
+        "poolmining": "pool.democats.org:45520",
+        "poolrpc": "http://pool.democats.org:7623/",
+        "daemonrpc": "http://nodes.democats.org:7621/"
+    }, {
+        "name": "Bikercoin",
+        "ticker": "BIC",
+        "poolmining": "pool2.democats.org:45560",
+        "poolrpc": "http://pool2.democats.org:7663/",
+        "daemonrpc": "http://pool2.democats.org:7661/"
+    }, {
+        "name": "Karbowanec",
+        "ticker": "KRB",
+        "poolmining": "pool2.democats.org:45570",
+        "poolrpc": "http://pool2.democats.org:7673/",
+        "daemonrpc": "http://pool2.democats.org:7671/"
+    }, {
+        "name": "Bipcoin",
+        "ticker": "BIP",
+        "poolmining": "pool.democats.org:45590",
+        "poolrpc": "http://pool.democats.org:7693/",
+        "daemonrpc": "http://pool.democats.org:7691/"
+    }, {
+        "name": "Bitcoal",
+        "ticker": "COAL",
+        "poolmining": "pool.democats.org:45600",
+        "poolrpc": "http://pool.democats.org:7703/",
+        "daemonrpc": "http://pool.democats.org:7701/"
+    }]
+}
