@@ -142,6 +142,10 @@ layout: default
         </div>
 <hr>
 
+        <div class="my-mining">
+<a class="twitter-timeline" href="https://twitter.com/DemocatsPool">Tweets by DemocatsPool</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+
       </div>
    </div>
 </div>

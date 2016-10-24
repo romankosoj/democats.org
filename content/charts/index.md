@@ -11,7 +11,7 @@ layout: default
       <noscript></noscript>
          <div ng-show="type == 'basic'" class="ng-hide">
             <h1><span><span>{{currency_name | capitalize}}</span><span> </span><span> basic charts</span></span></h1>
-            <div class="row" ng-show="currency_name == 'bytecoin' || currency_name == 'dashcoin' || currency_name == 'karbowanec'">
+            <div class="row" ng-show="currency_name == 'bytecoin' || currency_name == 'dashcoin' || currency_name == 'karbowanec' || currency_name == 'bikercoin' || currency_name == 'xcicoin'">
                <div class="col-md-12">
                   <highchart id="chart1" config="chartMarketcapConfig" class="span6"></highchart>
                </div>
