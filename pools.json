@@ -4,7 +4,7 @@
         "ticker": "BCN",
         "poolmining": "pool.democats.org:45500",
         "poolrpc": "http://pool.democats.org:7603/",
-        "daemonrpc": "http://nodes.democats.org:7601/"
+        "daemonrpc": "http://nodes1.democats.org:7601/"
     }, {
         "name": "Dashcoin",
         "ticker": "DSH",
@@ -16,7 +16,7 @@
         "ticker": "XMN",
         "poolmining": "pool.democats.org:45520",
         "poolrpc": "http://pool.democats.org:7623/",
-        "daemonrpc": "http://nodes.democats.org:7621/"
+        "daemonrpc": "http://nodes1.democats.org:7621/"
     }, {
         "name": "Bikercoin",
         "ticker": "BIC",
@@ -30,7 +30,7 @@
         "poolrpc": "http://pool2.democats.org:7673/",
         "daemonrpc": "http://pool2.democats.org:7671/"
     }, {
-        "name": "Bipcoin",
+        "name": "BipCoin",
         "ticker": "BIP",
         "poolmining": "pool.democats.org:45590",
         "poolrpc": "http://pool.democats.org:7693/",
@@ -41,5 +41,11 @@
         "poolmining": "pool.democats.org:45600",
         "poolrpc": "http://pool.democats.org:7703/",
         "daemonrpc": "http://pool.democats.org:7701/"
+    }, {
+        "name": "XCICoin",
+        "ticker": "XCI",
+        "poolmining": "pool3.democats.org:45710",
+        "poolrpc": "http://pool3.democats.org:7713/",
+        "daemonrpc": "http://pool3.democats.org:7711/"
     }]
 }
