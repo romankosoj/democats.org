@@ -21,7 +21,7 @@ layout: default
       </div>
       <div class="stats row">
           <div class="col-md-3">nicehash Address:</div>
-          <div class="col-md-9"><b>stratum+tcp://{{selected_pool.poolmining+1}}</b></div>
+          <div class="col-md-9"><b>stratum+tcp://{{selected_pool.poolmining.substring(0, selected_pool.poolmining.length - 1)+1}}</b></div>
       </div>
       <div class="row">
          <div class="col-md-12">
