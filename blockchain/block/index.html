@@ -137,18 +137,16 @@
                </td>
                <td>{{block.difficulty | number}}</td>
             </tr>
-<!--
             <tr>
                <td>
                   <span>Orphan</span>
                   <a class="hint hint--html hint--right hint--rounded hint--tooltip circle">
-                     <div class="hint__content" style="width:400px;white-space:normal;">True, if the block belongs to an alternative chain.<br>In such case all the transactions, excluding coinbase, are removed from the block back to transaction pool to be included in another block. It means there is no reward for the miner.</div>
+                     <div class="hint__content" style="width:400px;white-space:normal;">True, if the block belongs to an alternative chain.<br />In such case all the transactions, excluding coinbase, are removed from the block back to transaction pool to be included in another block. It means there is no reward for the miner.</div>
                      <span>?</span>
                   </a>
                </td>
                <td>{{block.orphan_status ? "yes" : "no"}}</td>
             </tr>
-//-->
             <tr>
                <td><span>Transactions</span><a data-hint="Number of transactions in the block, including coinbase transaction (which transfers block reward to the miner)." class="hint--right hint--rounded hint--tooltip circle">?</a></td>
                <td>{{block.transactions.length | number}}</td>
