@@ -143,7 +143,7 @@ layout: default
 <hr>
 
         <div class="my-mining">
-<a class="twitter-timeline" data-height="600" href="https://twitter.com/DemocatsPool">Tweets by DemocatsPool</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<a class="twitter-timeline" data-height="400" href="https://twitter.com/DemocatsPool">Tweets by DemocatsPool</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
         </div>
 
       </div>

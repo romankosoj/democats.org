@@ -64,7 +64,7 @@ layout: default
                      <span>?</span>
                   </a>
                </td>
-               <td>{{block.orphan_status ? "yes" : "no"}}</td>
+               <td>{{block.orphan_status ? "no" : "yes"}}</td>
             </tr>
             <tr>
                <td><span>Transactions</span><a data-hint="Number of transactions in the block, including coinbase transaction (which transfers block reward to the miner)." class="hint--right hint--rounded hint--tooltip circle">?</a></td>
